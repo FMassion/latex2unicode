@@ -231,5 +231,25 @@
 {
 "text": "Preis $5 und $10",
 "out": "Preis $5 und $10"
+},
+{
+"in": "Riemannsche Zetafunktion",
+"out": "𝑅𝑖𝑒𝑚𝑎𝑛𝑛𝑠𝑐ℎ𝑒𝑍𝑒𝑡𝑎𝑓𝑢𝑛𝑘𝑡𝑖𝑜𝑛",
+"warn": true
+},
+{
+"in": "\\text{Riemannsche Zetafunktion}",
+"out": "Riemannsche Zetafunktion",
+"warn": false
+},
+{
+"text": "Riemannsche Zetafunktion: $\\zeta(s) = \\sum_{n=1}^{\\infty} n^{-s}$",
+"out": "Riemannsche Zetafunktion: ζ(𝑠) = ∑ₙ₌₁^∞ 𝑛⁻ˢ",
+"warn": true
+},
+{
+"in": "a b + xy z",
+"out": "𝑎𝑏 + 𝑥𝑦𝑧",
+"warn": false
 }
 ]

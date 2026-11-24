@@ -1937,7 +1937,7 @@ const L2U_TABLES = {
   "texttt": "tt",
   "textup": null
  },
- "VERSION": "1.2.0",
+ "VERSION": "1.2.1",
  "VULGAR": {
   "1/10": "\u2152",
   "1/2": "\u00bd",

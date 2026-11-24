@@ -37,7 +37,7 @@ import unicodedata
 from functools import lru_cache
 
 __all__ = ["convert", "convert_text"]
-__version__ = "1.2.0"
+__version__ = "1.2.1"
 
 _u = unicodedata.lookup
 
@@ -542,7 +542,33 @@ def _is_greek(c):
     return unicodedata.name(c, "").startswith("GREEK ")
 
 
+WORD_SPACE_HINT = ("Leerzeichen zwischen Wörtern werden in Formeln ignoriert (wie in LaTeX). "
+                   "Für normalen Text \\text{…} verwenden oder den Text außerhalb von $…$ schreiben.")
+
+
+def _check_word_spaces(nodes, ctx):
+    """Hinweis, wenn in einer Formel zwei Wörter (je ≥ 3 Buchstaben) durch ein Leerzeichen getrennt sind."""
+    seq, cur = [], 0
+    for nd in nodes:
+        if nd[0] == "chr" and nd[1].isascii() and nd[1].isalpha():
+            cur += 1
+            continue
+        if cur:
+            seq.append(("w", cur))
+            cur = 0
+        seq.append(("ws", 0) if nd[0] == "ws" else ("x", 0))
+    if cur:
+        seq.append(("w", cur))
+    for i in range(len(seq) - 2):
+        a, b, c = seq[i], seq[i + 1], seq[i + 2]
+        if a[0] == "w" and a[1] >= 3 and b[0] == "ws" and c[0] == "w" and c[1] >= 3:
+            ctx.opts.warn(WORD_SPACE_HINT)
+            return
+
+
 def _render(nodes, ctx):
+    if not ctx.text and not ctx.script:
+        _check_word_spaces(nodes, ctx)
     atoms = []
     for nd in nodes:
         atoms.extend(_render_node(nd, ctx))

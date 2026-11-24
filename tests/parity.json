@@ -1,0 +1,2137 @@
+[
+{
+"in": "...",
+"out": "...",
+"warnings": []
+},
+{
+"in": "A \\approx B \\ \\land\\ B \\approx C \\ \\nRightarrow\\ A \\approx C",
+"out": "𝐴 ≈ 𝐵 ∧ 𝐵 ≈ 𝐶 ⇏ 𝐴 ≈ 𝐶",
+"warnings": []
+},
+{
+"in": "P(A \\mid B) = \\frac{P(B \\mid A)\\,P(A)}{P(B)}",
+"out": "𝑃(𝐴 ∣ 𝐵) = (𝑃(𝐵 ∣ 𝐴) 𝑃(𝐴))/(𝑃(𝐵))",
+"warnings": []
+},
+{
+"in": "Y_{ij} = \\beta_0 + \\beta_1 x_{ij} + u_i + \\epsilon_{ij}",
+"out": "𝑌ᵢⱼ = β₀ + β₁𝑥ᵢⱼ + 𝑢ᵢ + ϵᵢⱼ",
+"warnings": []
+},
+{
+"in": "X = \\langle S, A, G, C, R\\rangle",
+"out": "𝑋 = ⟨𝑆, 𝐴, 𝐺, 𝐶, 𝑅⟩",
+"warnings": []
+},
+{
+"in": "Y = \\{y_1, \\ldots, y_n\\}",
+"out": "𝑌 = {𝑦₁, …, 𝑦ₙ}",
+"warnings": []
+},
+{
+"in": "\\underset{Y}{\\operatorname{Select}}(L, M, \\Gamma, \\rho, \\delta, \\pi)",
+"out": "Select_Y(𝐿, 𝑀, Γ, ρ, δ, π)",
+"warnings": [
+"Tiefstellung von 'Y' nicht vollständig in Unicode verfügbar (fehlt: Y) – Ersatzschreibweise verwendet."
+]
+},
+{
+"in": "E_{\\text{visual}} \\circ F_{\\text{DE/TR}} \\circ T_{\\text{DE}\\rightarrow\\{\\text{DE,TR}\\}}(S)",
+"out": "𝐸ᵥᵢₛᵤₐₗ ∘ 𝐹_(DE/TR) ∘ 𝑇_(DE→{DE,TR})(𝑆)",
+"warnings": [
+"Tiefstellung von 'DE/TR' nicht vollständig in Unicode verfügbar (fehlt: / D E R T) – Ersatzschreibweise verwendet.",
+"Tiefstellung von 'DE→{DE,TR}' nicht vollständig in Unicode verfügbar (fehlt: D E R T { } →) – Ersatzschreibweise verwendet."
+]
+},
+{
+"in": "F \\circ T \\neq T \\circ F",
+"out": "𝐹 ∘ 𝑇 ≠ 𝑇 ∘ 𝐹",
+"warnings": []
+},
+{
+"in": "W \\xrightarrow{\\;A_H\\;} P_H \\qquad W \\xrightarrow{\\;A_M\\;} P_M",
+"out": "𝑊 →^(A_H) 𝑃_H  𝑊 →^(A_M) 𝑃_M",
+"warnings": [
+"Tiefstellung von 'H' nicht vollständig in Unicode verfügbar (fehlt: H) – Ersatzschreibweise verwendet.",
+"Hochstellung von 'A_H' nicht vollständig in Unicode verfügbar (fehlt: _) – Ersatzschreibweise verwendet.",
+"Tiefstellung von 'M' nicht vollständig in Unicode verfügbar (fehlt: M) – Ersatzschreibweise verwendet.",
+"Hochstellung von 'A_M' nicht vollständig in Unicode verfügbar (fehlt: _) – Ersatzschreibweise verwendet."
+]
+},
+{
+"in": "\\operatorname{Core}(S) \\subseteq \\operatorname{Recover}(y_i) \\qquad \\Delta(y_i, S) \\leq \\epsilon_G",
+"out": "Core(𝑆) ⊆ Recover(𝑦ᵢ)  Δ(𝑦ᵢ, 𝑆) ≤ ϵ_G",
+"warnings": [
+"Tiefstellung von 'G' nicht vollständig in Unicode verfügbar (fehlt: G) – Ersatzschreibweise verwendet."
+]
+},
+{
+"in": "\\forall\\,\\text{Output}:\\ \\operatorname{Provenance}(\\text{Output}) \\neq \\varnothing",
+"out": "∀ Output : Provenance(Output) ≠ ∅",
+"warnings": []
+},
+{
+"in": "D_{\\text{effective}} = \\frac{\\text{korrekt erschlossene Propositionen}}{\\text{Rezeptionszeit}\\cdot(1+\\lambda\\,CL)}",
+"out": "𝐷_(effective) = (korrekt erschlossene Propositionen)/(Rezeptionszeit ⋅ (1 + λ 𝐶𝐿))",
+"warnings": [
+"Tiefstellung von 'effective' nicht vollständig in Unicode verfügbar (fehlt: c f) – Ersatzschreibweise verwendet."
+]
+},
+{
+"in": "H_{A1}: \\text{Human+AI} > \\text{Human}",
+"out": "𝐻_(A1) : Human+AI > Human",
+"warnings": [
+"Tiefstellung von 'A1' nicht vollständig in Unicode verfügbar (fehlt: A) – Ersatzschreibweise verwendet."
+]
+},
+{
+"in": "H_C: P(\\text{Path} \\mid \\text{Human+AI}) \\neq P(\\text{Path} \\mid \\text{Human})",
+"out": "𝐻_C : 𝑃(Path ∣ Human+AI) ≠ 𝑃(Path ∣ Human)",
+"warnings": [
+"Tiefstellung von 'C' nicht vollständig in Unicode verfügbar (fehlt: C) – Ersatzschreibweise verwendet."
+]
+},
+{
+"in": "Y_{ij} = \\beta_0 + \\beta_1\\,\\text{Condition} + \\ldots + u_{\\text{participant}} + v_{\\text{stimulus}} + \\epsilon",
+"out": "𝑌ᵢⱼ = β₀ + β₁ Condition + … + 𝑢_(participant) + 𝑣ₛₜᵢₘᵤₗᵤₛ + ϵ",
+"warnings": [
+"Tiefstellung von 'participant' nicht vollständig in Unicode verfügbar (fehlt: c) – Ersatzschreibweise verwendet."
+]
+},
+{
+"in": "\\operatorname{EC}(H, M) > 0",
+"out": "EC(𝐻, 𝑀) > 0",
+"warnings": []
+},
+{
+"in": "\\approx",
+"out": "≈",
+"warnings": []
+},
+{
+"in": "x \\in X",
+"out": "𝑥 ∈ 𝑋",
+"warnings": []
+},
+{
+"in": "i",
+"out": "𝑖",
+"warnings": []
+},
+{
+"in": "n",
+"out": "𝑛",
+"warnings": []
+},
+{
+"in": "x=0",
+"out": "𝑥 = 0",
+"warnings": []
+},
+{
+"in": "n=1",
+"out": "𝑛 = 1",
+"warnings": []
+},
+{
+"in": "\\lambda \\to 0",
+"out": "λ → 0",
+"warnings": []
+},
+{
+"in": "\\alpha",
+"out": "α",
+"warnings": []
+},
+{
+"in": "\\beta",
+"out": "β",
+"warnings": []
+},
+{
+"in": "\\gamma",
+"out": "γ",
+"warnings": []
+},
+{
+"in": "\\delta",
+"out": "δ",
+"warnings": []
+},
+{
+"in": "\\Delta",
+"out": "Δ",
+"warnings": []
+},
+{
+"in": "\\epsilon",
+"out": "ϵ",
+"warnings": []
+},
+{
+"in": "\\varepsilon",
+"out": "ε",
+"warnings": []
+},
+{
+"in": "\\zeta",
+"out": "ζ",
+"warnings": []
+},
+{
+"in": "\\zeta(s)",
+"out": "ζ(𝑠)",
+"warnings": []
+},
+{
+"in": "\\eta",
+"out": "η",
+"warnings": []
+},
+{
+"in": "\\theta",
+"out": "θ",
+"warnings": []
+},
+{
+"in": "\\Theta",
+"out": "Θ",
+"warnings": []
+},
+{
+"in": "\\kappa",
+"out": "κ",
+"warnings": []
+},
+{
+"in": "\\lambda",
+"out": "λ",
+"warnings": []
+},
+{
+"in": "\\mu",
+"out": "μ",
+"warnings": []
+},
+{
+"in": "\\nu",
+"out": "ν",
+"warnings": []
+},
+{
+"in": "\\pi",
+"out": "π",
+"warnings": []
+},
+{
+"in": "\\Pi",
+"out": "Π",
+"warnings": []
+},
+{
+"in": "\\rho",
+"out": "ρ",
+"warnings": []
+},
+{
+"in": "\\sigma",
+"out": "σ",
+"warnings": []
+},
+{
+"in": "\\Sigma",
+"out": "Σ",
+"warnings": []
+},
+{
+"in": "\\tau",
+"out": "τ",
+"warnings": []
+},
+{
+"in": "\\phi",
+"out": "ϕ",
+"warnings": []
+},
+{
+"in": "\\varphi",
+"out": "φ",
+"warnings": []
+},
+{
+"in": "\\Phi",
+"out": "Φ",
+"warnings": []
+},
+{
+"in": "\\chi",
+"out": "χ",
+"warnings": []
+},
+{
+"in": "\\chi^2",
+"out": "χ²",
+"warnings": []
+},
+{
+"in": "\\psi",
+"out": "ψ",
+"warnings": []
+},
+{
+"in": "\\Psi",
+"out": "Ψ",
+"warnings": []
+},
+{
+"in": "\\omega",
+"out": "ω",
+"warnings": []
+},
+{
+"in": "\\Omega",
+"out": "Ω",
+"warnings": []
+},
+{
+"in": "\\mathbb{N}",
+"out": "ℕ",
+"warnings": []
+},
+{
+"in": "\\mathbb{Z}",
+"out": "ℤ",
+"warnings": []
+},
+{
+"in": "\\mathbb{Q}",
+"out": "ℚ",
+"warnings": []
+},
+{
+"in": "\\mathbb{R}",
+"out": "ℝ",
+"warnings": []
+},
+{
+"in": "\\mathbb{C}",
+"out": "ℂ",
+"warnings": []
+},
+{
+"in": "\\mathbb{R}^n",
+"out": "ℝⁿ",
+"warnings": []
+},
+{
+"in": "\\mathbb{R}^{m\\times n}",
+"out": "ℝ^(m×n)",
+"warnings": [
+"Hochstellung von 'm×n' nicht vollständig in Unicode verfügbar (fehlt: ×) – Ersatzschreibweise verwendet."
+]
+},
+{
+"in": "m",
+"out": "𝑚",
+"warnings": []
+},
+{
+"in": "\\mathbb{R}_{\\geq 0}",
+"out": "ℝ_(≥0)",
+"warnings": [
+"Tiefstellung von '≥0' nicht vollständig in Unicode verfügbar (fehlt: ≥) – Ersatzschreibweise verwendet."
+]
+},
+{
+"in": "[0,1]",
+"out": "[0, 1]",
+"warnings": []
+},
+{
+"in": "(0,1)",
+"out": "(0, 1)",
+"warnings": []
+},
+{
+"in": "\\forall",
+"out": "∀",
+"warnings": []
+},
+{
+"in": "\\forall x \\in \\mathbb{R}: x^2 \\geq 0",
+"out": "∀𝑥 ∈ ℝ : 𝑥² ≥ 0",
+"warnings": []
+},
+{
+"in": "\\exists",
+"out": "∃",
+"warnings": []
+},
+{
+"in": "\\exists x: x^2 = 4",
+"out": "∃𝑥 : 𝑥² = 4",
+"warnings": []
+},
+{
+"in": "\\exists!",
+"out": "∃!",
+"warnings": []
+},
+{
+"in": "\\nexists",
+"out": "∄",
+"warnings": []
+},
+{
+"in": "\\land",
+"out": "∧",
+"warnings": []
+},
+{
+"in": "A \\land B",
+"out": "𝐴 ∧ 𝐵",
+"warnings": []
+},
+{
+"in": "\\lor",
+"out": "∨",
+"warnings": []
+},
+{
+"in": "A \\lor B",
+"out": "𝐴 ∨ 𝐵",
+"warnings": []
+},
+{
+"in": "\\lnot",
+"out": "¬",
+"warnings": []
+},
+{
+"in": "\\lnot A",
+"out": "¬𝐴",
+"warnings": []
+},
+{
+"in": "\\Rightarrow",
+"out": "⇒",
+"warnings": []
+},
+{
+"in": "A \\Rightarrow B",
+"out": "𝐴 ⇒ 𝐵",
+"warnings": []
+},
+{
+"in": "\\Leftarrow",
+"out": "⇐",
+"warnings": []
+},
+{
+"in": "\\Leftrightarrow",
+"out": "⇔",
+"warnings": []
+},
+{
+"in": "A \\Leftrightarrow B",
+"out": "𝐴 ⇔ 𝐵",
+"warnings": []
+},
+{
+"in": "\\iff",
+"out": "⟺",
+"warnings": []
+},
+{
+"in": "\\vdash",
+"out": "⊢",
+"warnings": []
+},
+{
+"in": "\\Gamma \\vdash \\varphi",
+"out": "Γ ⊢ φ",
+"warnings": []
+},
+{
+"in": "\\models",
+"out": "⊨",
+"warnings": []
+},
+{
+"in": "\\Gamma \\models \\varphi",
+"out": "Γ ⊨ φ",
+"warnings": []
+},
+{
+"in": "\\therefore",
+"out": "∴",
+"warnings": []
+},
+{
+"in": "\\because",
+"out": "∵",
+"warnings": []
+},
+{
+"in": "\\top",
+"out": "⊤",
+"warnings": []
+},
+{
+"in": "\\bot",
+"out": "⊥",
+"warnings": []
+},
+{
+"in": ":=",
+"out": ":=",
+"warnings": []
+},
+{
+"in": "\\coloneqq",
+"out": "≔",
+"warnings": []
+},
+{
+"in": "f(x) := x^2",
+"out": "𝑓(𝑥) := 𝑥²",
+"warnings": []
+},
+{
+"in": "\\equiv",
+"out": "≡",
+"warnings": []
+},
+{
+"in": "a \\equiv b \\pmod n",
+"out": "𝑎 ≡ 𝑏 (mod 𝑛)",
+"warnings": []
+},
+{
+"in": "\\blacksquare",
+"out": "■",
+"warnings": []
+},
+{
+"in": "\\square",
+"out": "□",
+"warnings": []
+},
+{
+"in": "\\{a,b,c\\}",
+"out": "{𝑎, 𝑏, 𝑐}",
+"warnings": []
+},
+{
+"in": "a,b,c",
+"out": "𝑎, 𝑏, 𝑐",
+"warnings": []
+},
+{
+"in": "\\{x \\mid P(x)\\}",
+"out": "{𝑥 ∣ 𝑃(𝑥)}",
+"warnings": []
+},
+{
+"in": "x",
+"out": "𝑥",
+"warnings": []
+},
+{
+"in": "P",
+"out": "𝑃",
+"warnings": []
+},
+{
+"in": "\\in",
+"out": "∈",
+"warnings": []
+},
+{
+"in": "x \\in A",
+"out": "𝑥 ∈ 𝐴",
+"warnings": []
+},
+{
+"in": "\\notin",
+"out": "∉",
+"warnings": []
+},
+{
+"in": "\\subset",
+"out": "⊂",
+"warnings": []
+},
+{
+"in": "\\subseteq",
+"out": "⊆",
+"warnings": []
+},
+{
+"in": "A \\subseteq B",
+"out": "𝐴 ⊆ 𝐵",
+"warnings": []
+},
+{
+"in": "\\subsetneq",
+"out": "⊊",
+"warnings": []
+},
+{
+"in": "\\supseteq",
+"out": "⊇",
+"warnings": []
+},
+{
+"in": "\\cup",
+"out": "∪",
+"warnings": []
+},
+{
+"in": "A \\cup B",
+"out": "𝐴 ∪ 𝐵",
+"warnings": []
+},
+{
+"in": "\\cap",
+"out": "∩",
+"warnings": []
+},
+{
+"in": "A \\cap B",
+"out": "𝐴 ∩ 𝐵",
+"warnings": []
+},
+{
+"in": "\\setminus",
+"out": "∖",
+"warnings": []
+},
+{
+"in": "A \\setminus B",
+"out": "𝐴 ∖ 𝐵",
+"warnings": []
+},
+{
+"in": "\\varnothing",
+"out": "∅",
+"warnings": []
+},
+{
+"in": "\\emptyset",
+"out": "∅",
+"warnings": []
+},
+{
+"in": "A^c",
+"out": "𝐴ᶜ",
+"warnings": []
+},
+{
+"in": "\\overline{A}",
+"out": "𝐴̅",
+"warnings": []
+},
+{
+"in": "A",
+"out": "𝐴",
+"warnings": []
+},
+{
+"in": "A \\times B",
+"out": "𝐴 × 𝐵",
+"warnings": []
+},
+{
+"in": "(a,b)",
+"out": "(𝑎, 𝑏)",
+"warnings": []
+},
+{
+"in": "A^n",
+"out": "𝐴ⁿ",
+"warnings": []
+},
+{
+"in": "\\mathcal{P}(A)",
+"out": "𝒫(𝐴)",
+"warnings": []
+},
+{
+"in": "2^A",
+"out": "2ᴬ",
+"warnings": []
+},
+{
+"in": "\\lvert A \\rvert",
+"out": "|𝐴|",
+"warnings": []
+},
+{
+"in": "\\#A",
+"out": "#𝐴",
+"warnings": []
+},
+{
+"in": "\\bigcup_i A_i",
+"out": "⋃ᵢ 𝐴ᵢ",
+"warnings": []
+},
+{
+"in": "\\bigcap_i A_i",
+"out": "⋂ᵢ 𝐴ᵢ",
+"warnings": []
+},
+{
+"in": "\\bigcup_i",
+"out": "⋃ᵢ",
+"warnings": []
+},
+{
+"in": "\\bigcap_i",
+"out": "⋂ᵢ",
+"warnings": []
+},
+{
+"in": "\\sqcup",
+"out": "⊔",
+"warnings": []
+},
+{
+"in": "\\uplus",
+"out": "⊎",
+"warnings": []
+},
+{
+"in": "=",
+"out": "=",
+"warnings": []
+},
+{
+"in": "\\neq",
+"out": "≠",
+"warnings": []
+},
+{
+"in": "<",
+"out": "<",
+"warnings": []
+},
+{
+"in": ">",
+"out": ">",
+"warnings": []
+},
+{
+"in": "\\leq",
+"out": "≤",
+"warnings": []
+},
+{
+"in": "\\geq",
+"out": "≥",
+"warnings": []
+},
+{
+"in": "\\ll",
+"out": "≪",
+"warnings": []
+},
+{
+"in": "\\gg",
+"out": "≫",
+"warnings": []
+},
+{
+"in": "\\simeq",
+"out": "≃",
+"warnings": []
+},
+{
+"in": "\\cong",
+"out": "≅",
+"warnings": []
+},
+{
+"in": "\\sim",
+"out": "∼",
+"warnings": []
+},
+{
+"in": "\\propto",
+"out": "∝",
+"warnings": []
+},
+{
+"in": "\\prec",
+"out": "≺",
+"warnings": []
+},
+{
+"in": "\\succ",
+"out": "≻",
+"warnings": []
+},
+{
+"in": "\\perp",
+"out": "⊥",
+"warnings": []
+},
+{
+"in": "\\parallel",
+"out": "∥",
+"warnings": []
+},
+{
+"in": "\\mid",
+"out": "∣",
+"warnings": []
+},
+{
+"in": "\\not",
+"out": "̸",
+"warnings": []
+},
+{
+"in": "\\not\\approx",
+"out": "≉",
+"warnings": []
+},
+{
+"in": "\\not\\equiv",
+"out": "≢",
+"warnings": []
+},
+{
+"in": "\\nsim",
+"out": "≁",
+"warnings": []
+},
+{
+"in": "\\ncong",
+"out": "≇",
+"warnings": []
+},
+{
+"in": "\\nless",
+"out": "≮",
+"warnings": []
+},
+{
+"in": "\\ngtr",
+"out": "≯",
+"warnings": []
+},
+{
+"in": "\\nleq",
+"out": "≰",
+"warnings": []
+},
+{
+"in": "\\ngeq",
+"out": "≱",
+"warnings": []
+},
+{
+"in": "\\not\\subset",
+"out": "⊄",
+"warnings": []
+},
+{
+"in": "\\nsubseteq",
+"out": "⊈",
+"warnings": []
+},
+{
+"in": "\\nmid",
+"out": "∤",
+"warnings": []
+},
+{
+"in": "\\nparallel",
+"out": "∦",
+"warnings": []
+},
+{
+"in": "\\not\\perp",
+"out": "⊥̸",
+"warnings": []
+},
+{
+"in": "\\nRightarrow",
+"out": "⇏",
+"warnings": []
+},
+{
+"in": "\\nLeftrightarrow",
+"out": "⇎",
+"warnings": []
+},
+{
+"in": "\\nrightarrow",
+"out": "↛",
+"warnings": []
+},
+{
+"in": "\\nvdash",
+"out": "⊬",
+"warnings": []
+},
+{
+"in": "\\nvDash",
+"out": "⊭",
+"warnings": []
+},
+{
+"in": "0 \\approx 1",
+"out": "0 ≈ 1",
+"warnings": []
+},
+{
+"in": "1 \\approx 2",
+"out": "1 ≈ 2",
+"warnings": []
+},
+{
+"in": "0 \\not\\approx 2",
+"out": "0 ≉ 2",
+"warnings": []
+},
+{
+"in": "\\to",
+"out": "→",
+"warnings": []
+},
+{
+"in": "\\rightarrow",
+"out": "→",
+"warnings": []
+},
+{
+"in": "f: A \\to B",
+"out": "𝑓 : 𝐴 → 𝐵",
+"warnings": []
+},
+{
+"in": "x \\to 0",
+"out": "𝑥 → 0",
+"warnings": []
+},
+{
+"in": "\\mapsto",
+"out": "↦",
+"warnings": []
+},
+{
+"in": "x \\mapsto x^2",
+"out": "𝑥 ↦ 𝑥²",
+"warnings": []
+},
+{
+"in": "\\hookrightarrow",
+"out": "↪",
+"warnings": []
+},
+{
+"in": "\\twoheadrightarrow",
+"out": "↠",
+"warnings": []
+},
+{
+"in": "\\xrightarrow{f}",
+"out": "→ᶠ",
+"warnings": []
+},
+{
+"in": "f",
+"out": "𝑓",
+"warnings": []
+},
+{
+"in": "\\leftarrow",
+"out": "←",
+"warnings": []
+},
+{
+"in": "x \\leftarrow x+1",
+"out": "𝑥 ← 𝑥 + 1",
+"warnings": []
+},
+{
+"in": "\\uparrow",
+"out": "↑",
+"warnings": []
+},
+{
+"in": "\\downarrow",
+"out": "↓",
+"warnings": []
+},
+{
+"in": "\\rightsquigarrow",
+"out": "⇝",
+"warnings": []
+},
+{
+"in": "\\sum_{i=1}^{n} a_i",
+"out": "∑ᵢ₌₁ⁿ 𝑎ᵢ",
+"warnings": []
+},
+{
+"in": "a_1 + \\dots + a_n",
+"out": "𝑎₁ + … + 𝑎ₙ",
+"warnings": []
+},
+{
+"in": "\\prod_{i=1}^{n} a_i",
+"out": "∏ᵢ₌₁ⁿ 𝑎ᵢ",
+"warnings": []
+},
+{
+"in": "a_1 \\cdot \\ldots \\cdot a_n",
+"out": "𝑎₁ ⋅ … ⋅ 𝑎ₙ",
+"warnings": []
+},
+{
+"in": "\\cdot",
+"out": "⋅",
+"warnings": []
+},
+{
+"in": "\\times",
+"out": "×",
+"warnings": []
+},
+{
+"in": "\\frac{a}{b}",
+"out": "𝑎/𝑏",
+"warnings": []
+},
+{
+"in": "a/b",
+"out": "𝑎/𝑏",
+"warnings": []
+},
+{
+"in": "a^n",
+"out": "𝑎ⁿ",
+"warnings": []
+},
+{
+"in": "\\sqrt{x}",
+"out": "√𝑥",
+"warnings": []
+},
+{
+"in": "\\sqrt[n]{x}",
+"out": "ⁿ√𝑥",
+"warnings": []
+},
+{
+"in": "n!",
+"out": "𝑛!",
+"warnings": []
+},
+{
+"in": "n\\cdot(n-1)\\cdots 1",
+"out": "𝑛 ⋅ (𝑛 − 1)⋯1",
+"warnings": []
+},
+{
+"in": "\\binom{n}{k}",
+"out": "C(𝑛, 𝑘)",
+"warnings": [
+"\\binom ist im Klartext nicht stapelbar – als C(n, k) geschrieben."
+]
+},
+{
+"in": "\\lvert x \\rvert",
+"out": "|𝑥|",
+"warnings": []
+},
+{
+"in": "\\lfloor x \\rfloor",
+"out": "⌊𝑥⌋",
+"warnings": []
+},
+{
+"in": "\\lceil x \\rceil",
+"out": "⌈𝑥⌉",
+"warnings": []
+},
+{
+"in": "\\bmod",
+"out": "mod",
+"warnings": []
+},
+{
+"in": "\\pmod{n}",
+"out": "(mod 𝑛)",
+"warnings": []
+},
+{
+"in": "\\pm",
+"out": "±",
+"warnings": []
+},
+{
+"in": "\\mp",
+"out": "∓",
+"warnings": []
+},
+{
+"in": "\\circ",
+"out": "∘",
+"warnings": []
+},
+{
+"in": "(f\\circ g)(x) = f(g(x))",
+"out": "(𝑓 ∘ 𝑔)(𝑥) = 𝑓(𝑔(𝑥))",
+"warnings": []
+},
+{
+"in": "\\ldots",
+"out": "…",
+"warnings": []
+},
+{
+"in": "\\cdots",
+"out": "⋯",
+"warnings": []
+},
+{
+"in": "\\vdots",
+"out": "⋮",
+"warnings": []
+},
+{
+"in": "\\ddots",
+"out": "⋱",
+"warnings": []
+},
+{
+"in": "\\max",
+"out": "max",
+"warnings": []
+},
+{
+"in": "\\min",
+"out": "min",
+"warnings": []
+},
+{
+"in": "\\sup",
+"out": "sup",
+"warnings": []
+},
+{
+"in": "\\inf",
+"out": "inf",
+"warnings": []
+},
+{
+"in": "\\arg\\max_x f(x)",
+"out": "arg maxₓ 𝑓(𝑥)",
+"warnings": []
+},
+{
+"in": "\\arg\\min_x f(x)",
+"out": "arg minₓ 𝑓(𝑥)",
+"warnings": []
+},
+{
+"in": "B",
+"out": "𝐵",
+"warnings": []
+},
+{
+"in": "f(x)",
+"out": "𝑓(𝑥)",
+"warnings": []
+},
+{
+"in": "f^{-1}",
+"out": "𝑓⁻¹",
+"warnings": []
+},
+{
+"in": "1/f",
+"out": "1/𝑓",
+"warnings": []
+},
+{
+"in": "f^2(x)",
+"out": "𝑓²(𝑥)",
+"warnings": []
+},
+{
+"in": "f(x)^2",
+"out": "𝑓(𝑥)²",
+"warnings": []
+},
+{
+"in": "f(f(x))",
+"out": "𝑓(𝑓(𝑥))",
+"warnings": []
+},
+{
+"in": "\\exp(x)",
+"out": "exp(𝑥)",
+"warnings": []
+},
+{
+"in": "e^x",
+"out": "𝑒ˣ",
+"warnings": []
+},
+{
+"in": "\\log x",
+"out": "log 𝑥",
+"warnings": []
+},
+{
+"in": "\\ln x",
+"out": "ln 𝑥",
+"warnings": []
+},
+{
+"in": "\\log_2 x",
+"out": "log₂ 𝑥",
+"warnings": []
+},
+{
+"in": "\\ln",
+"out": "ln",
+"warnings": []
+},
+{
+"in": "e",
+"out": "𝑒",
+"warnings": []
+},
+{
+"in": "\\log = \\log_2",
+"out": "log = log₂",
+"warnings": []
+},
+{
+"in": "\\log",
+"out": "log",
+"warnings": []
+},
+{
+"in": "\\log_2",
+"out": "log₂",
+"warnings": []
+},
+{
+"in": "\\mathbb{1}[A]",
+"out": "𝟙[𝐴]",
+"warnings": []
+},
+{
+"in": "\\mathbf{1}_A",
+"out": "𝟏_A",
+"warnings": [
+"Tiefstellung von 'A' nicht vollständig in Unicode verfügbar (fehlt: A) – Ersatzschreibweise verwendet."
+]
+},
+{
+"in": "\\operatorname{sign}(x)",
+"out": "sign(𝑥)",
+"warnings": []
+},
+{
+"in": "\\delta_{ij}",
+"out": "δᵢⱼ",
+"warnings": []
+},
+{
+"in": "i=j",
+"out": "𝑖 = 𝑗",
+"warnings": []
+},
+{
+"in": "\\sigma(x)",
+"out": "σ(𝑥)",
+"warnings": []
+},
+{
+"in": "\\frac{1}{1+e^{-x}}",
+"out": "1/(1 + 𝑒⁻ˣ)",
+"warnings": []
+},
+{
+"in": "\\operatorname{softmax}",
+"out": "softmax",
+"warnings": []
+},
+{
+"in": "\\frac{e^{z_i}}{\\sum_j e^{z_j}}",
+"out": "𝑒^(zᵢ)/(∑ⱼ 𝑒^(zⱼ))",
+"warnings": [
+"Hochstellung von 'zᵢ' nicht vollständig in Unicode verfügbar (fehlt: ᵢ) – Ersatzschreibweise verwendet.",
+"Hochstellung von 'zⱼ' nicht vollständig in Unicode verfügbar (fehlt: ⱼ) – Ersatzschreibweise verwendet."
+]
+},
+{
+"in": "O(n)",
+"out": "𝑂(𝑛)",
+"warnings": []
+},
+{
+"in": "\\Theta(n)",
+"out": "Θ(𝑛)",
+"warnings": []
+},
+{
+"in": "\\Omega(n)",
+"out": "Ω(𝑛)",
+"warnings": []
+},
+{
+"in": "o(1)",
+"out": "𝑜(1)",
+"warnings": []
+},
+{
+"in": "\\arg",
+"out": "arg",
+"warnings": []
+},
+{
+"in": "\\lim_{x\\to a} f(x)",
+"out": "lim_(x→a) 𝑓(𝑥)",
+"warnings": [
+"Tiefstellung von 'x→a' nicht vollständig in Unicode verfügbar (fehlt: →) – Ersatzschreibweise verwendet."
+]
+},
+{
+"in": "a",
+"out": "𝑎",
+"warnings": []
+},
+{
+"in": "\\infty",
+"out": "∞",
+"warnings": []
+},
+{
+"in": "f'(x)",
+"out": "𝑓′(𝑥)",
+"warnings": []
+},
+{
+"in": "\\dfrac{df}{dx}",
+"out": "𝑑𝑓/𝑑𝑥",
+"warnings": []
+},
+{
+"in": "\\frac{df}{dx}",
+"out": "𝑑𝑓/𝑑𝑥",
+"warnings": []
+},
+{
+"in": "\\dot{x}",
+"out": "𝑥̇",
+"warnings": []
+},
+{
+"in": "\\partial",
+"out": "∂",
+"warnings": []
+},
+{
+"in": "\\dfrac{\\partial f}{\\partial x}",
+"out": "∂𝑓/∂𝑥",
+"warnings": []
+},
+{
+"in": "\\nabla f",
+"out": "∇𝑓",
+"warnings": []
+},
+{
+"in": "\\nabla \\cdot F",
+"out": "∇ ⋅ 𝐹",
+"warnings": []
+},
+{
+"in": "\\Delta f",
+"out": "Δ𝑓",
+"warnings": []
+},
+{
+"in": "\\nabla^2 f",
+"out": "∇²𝑓",
+"warnings": []
+},
+{
+"in": "\\int_a^b f(x)\\,dx",
+"out": "∫ₐᵇ 𝑓(𝑥) 𝑑𝑥",
+"warnings": []
+},
+{
+"in": "b",
+"out": "𝑏",
+"warnings": []
+},
+{
+"in": "\\oint",
+"out": "∮",
+"warnings": []
+},
+{
+"in": "\\iint",
+"out": "∬",
+"warnings": []
+},
+{
+"in": "\\iiint",
+"out": "∭",
+"warnings": []
+},
+{
+"in": "\\sum_{n=0}^{\\infty}",
+"out": "∑ₙ₌₀^∞",
+"warnings": [
+"Hochstellung von '∞' nicht vollständig in Unicode verfügbar (fehlt: ∞) – Ersatzschreibweise verwendet."
+]
+},
+{
+"in": "\\epsilon>0",
+"out": "ϵ > 0",
+"warnings": []
+},
+{
+"in": "\\delta>0",
+"out": "δ > 0",
+"warnings": []
+},
+{
+"in": "\\mathbf{x}",
+"out": "𝐱",
+"warnings": []
+},
+{
+"in": "\\vec{x}",
+"out": "𝑥⃗",
+"warnings": []
+},
+{
+"in": "\\boldsymbol{x}",
+"out": "𝒙",
+"warnings": []
+},
+{
+"in": "\\mathbf{A}",
+"out": "𝐀",
+"warnings": []
+},
+{
+"in": "A^\\top",
+"out": "𝐴ᵀ",
+"warnings": [
+"Hochstellung: '⊤' durch Ersatzzeichen 'ᵀ' (U+1D40 MODIFIER LETTER CAPITAL T) dargestellt."
+]
+},
+{
+"in": "A^T",
+"out": "𝐴ᵀ",
+"warnings": []
+},
+{
+"in": "A^{-1}",
+"out": "𝐴⁻¹",
+"warnings": []
+},
+{
+"in": "I",
+"out": "𝐼",
+"warnings": []
+},
+{
+"in": "I_n",
+"out": "𝐼ₙ",
+"warnings": []
+},
+{
+"in": "\\det(A)",
+"out": "det(𝐴)",
+"warnings": []
+},
+{
+"in": "\\operatorname{tr}(A)",
+"out": "tr(𝐴)",
+"warnings": []
+},
+{
+"in": "\\operatorname{rank}(A)",
+"out": "rank(𝐴)",
+"warnings": []
+},
+{
+"in": "\\langle x, y\\rangle",
+"out": "⟨𝑥, 𝑦⟩",
+"warnings": []
+},
+{
+"in": "x^\\top y",
+"out": "𝑥ᵀ𝑦",
+"warnings": [
+"Hochstellung: '⊤' durch Ersatzzeichen 'ᵀ' (U+1D40 MODIFIER LETTER CAPITAL T) dargestellt."
+]
+},
+{
+"in": "x\\cdot y",
+"out": "𝑥 ⋅ 𝑦",
+"warnings": []
+},
+{
+"in": "\\lVert x\\rVert",
+"out": "‖𝑥‖",
+"warnings": []
+},
+{
+"in": "\\lVert x\\rVert_2",
+"out": "‖𝑥‖₂",
+"warnings": []
+},
+{
+"in": "_2",
+"out": "₂",
+"warnings": []
+},
+{
+"in": "\\lVert x\\rVert_1",
+"out": "‖𝑥‖₁",
+"warnings": []
+},
+{
+"in": "\\lVert A\\rVert_F",
+"out": "‖𝐴‖_F",
+"warnings": [
+"Tiefstellung von 'F' nicht vollständig in Unicode verfügbar (fehlt: F) – Ersatzschreibweise verwendet."
+]
+},
+{
+"in": "\\hat{x}",
+"out": "𝑥̂",
+"warnings": []
+},
+{
+"in": "\\odot",
+"out": "⊙",
+"warnings": []
+},
+{
+"in": "\\otimes",
+"out": "⊗",
+"warnings": []
+},
+{
+"in": "\\oplus",
+"out": "⊕",
+"warnings": []
+},
+{
+"in": "\\mathbb{R}^3",
+"out": "ℝ³",
+"warnings": []
+},
+{
+"in": "\\operatorname{span}",
+"out": "span",
+"warnings": []
+},
+{
+"in": "\\ker",
+"out": "ker",
+"warnings": []
+},
+{
+"in": "\\operatorname{im}",
+"out": "im",
+"warnings": []
+},
+{
+"in": "Av = \\lambda v",
+"out": "𝐴𝑣 = λ𝑣",
+"warnings": []
+},
+{
+"in": "v",
+"out": "𝑣",
+"warnings": []
+},
+{
+"in": "A = U\\Sigma V^\\top",
+"out": "𝐴 = 𝑈Σ𝑉ᵀ",
+"warnings": [
+"Hochstellung: '⊤' durch Ersatzzeichen 'ᵀ' (U+1D40 MODIFIER LETTER CAPITAL T) dargestellt."
+]
+},
+{
+"in": "\\cos\\theta = \\dfrac{x^\\top y}{\\lVert x\\rVert\\,\\lVert y\\rVert}",
+"out": "cos θ = 𝑥ᵀ𝑦/(‖𝑥‖ ‖𝑦‖)",
+"warnings": [
+"Hochstellung: '⊤' durch Ersatzzeichen 'ᵀ' (U+1D40 MODIFIER LETTER CAPITAL T) dargestellt."
+]
+},
+{
+"in": "P(A)",
+"out": "𝑃(𝐴)",
+"warnings": []
+},
+{
+"in": "\\Pr(A)",
+"out": "Pr(𝐴)",
+"warnings": []
+},
+{
+"in": "P(A \\mid B)",
+"out": "𝑃(𝐴 ∣ 𝐵)",
+"warnings": []
+},
+{
+"in": "P(A \\cap B)",
+"out": "𝑃(𝐴 ∩ 𝐵)",
+"warnings": []
+},
+{
+"in": "X \\perp Y",
+"out": "𝑋 ⊥ 𝑌",
+"warnings": []
+},
+{
+"in": "X",
+"out": "𝑋",
+"warnings": []
+},
+{
+"in": "Y",
+"out": "𝑌",
+"warnings": []
+},
+{
+"in": "X \\sim \\mathcal{N}(\\mu,\\sigma^2)",
+"out": "𝑋 ∼ 𝒩(μ, σ²)",
+"warnings": []
+},
+{
+"in": "\\sigma^2",
+"out": "σ²",
+"warnings": []
+},
+{
+"in": "\\mathcal{U}(a,b)",
+"out": "𝒰(𝑎, 𝑏)",
+"warnings": []
+},
+{
+"in": "\\mathrm{Bernoulli}(p)",
+"out": "Bernoulli(𝑝)",
+"warnings": []
+},
+{
+"in": "\\mathrm{Bin}(n,p)",
+"out": "Bin(𝑛, 𝑝)",
+"warnings": []
+},
+{
+"in": "\\mathbb{E}[X]",
+"out": "𝔼[𝑋]",
+"warnings": []
+},
+{
+"in": "E(X)",
+"out": "𝐸(𝑋)",
+"warnings": []
+},
+{
+"in": "\\mathbb{E}_{x\\sim p}[f(x)]",
+"out": "𝔼_(x∼p)[𝑓(𝑥)]",
+"warnings": [
+"Tiefstellung von 'x∼p' nicht vollständig in Unicode verfügbar (fehlt: ∼) – Ersatzschreibweise verwendet."
+]
+},
+{
+"in": "p",
+"out": "𝑝",
+"warnings": []
+},
+{
+"in": "\\operatorname{Var}(X)",
+"out": "Var(𝑋)",
+"warnings": []
+},
+{
+"in": "\\operatorname{Cov}(X,Y)",
+"out": "Cov(𝑋, 𝑌)",
+"warnings": []
+},
+{
+"in": "\\rho_{XY}",
+"out": "ρ_(XY)",
+"warnings": [
+"Tiefstellung von 'XY' nicht vollständig in Unicode verfügbar (fehlt: X Y) – Ersatzschreibweise verwendet."
+]
+},
+{
+"in": "r",
+"out": "𝑟",
+"warnings": []
+},
+{
+"in": "\\bar{x}",
+"out": "𝑥̄",
+"warnings": []
+},
+{
+"in": "\\hat{\\theta}",
+"out": "θ̂",
+"warnings": []
+},
+{
+"in": "\\theta^*",
+"out": "θ*",
+"warnings": [
+"Hochstellung: '∗' durch Ersatzzeichen '*' (U+002A ASTERISK) dargestellt."
+]
+},
+{
+"in": "\\hat{\\theta}_{\\mathrm{MLE}}",
+"out": "θ̂_(MLE)",
+"warnings": [
+"Tiefstellung von 'MLE' nicht vollständig in Unicode verfügbar (fehlt: E L M) – Ersatzschreibweise verwendet."
+]
+},
+{
+"in": "L(\\theta)",
+"out": "𝐿(θ)",
+"warnings": []
+},
+{
+"in": "\\ell(\\theta)",
+"out": "ℓ(θ)",
+"warnings": []
+},
+{
+"in": "p(x)",
+"out": "𝑝(𝑥)",
+"warnings": []
+},
+{
+"in": "f_X(x)",
+"out": "𝑓_X(𝑥)",
+"warnings": [
+"Tiefstellung von 'X' nicht vollständig in Unicode verfügbar (fehlt: X) – Ersatzschreibweise verwendet."
+]
+},
+{
+"in": "F_X(x)",
+"out": "𝐹_X(𝑥)",
+"warnings": [
+"Tiefstellung von 'X' nicht vollständig in Unicode verfügbar (fehlt: X) – Ersatzschreibweise verwendet."
+]
+},
+{
+"in": "P(X\\leq x)",
+"out": "𝑃(𝑋 ≤ 𝑥)",
+"warnings": []
+},
+{
+"in": "H_0",
+"out": "𝐻₀",
+"warnings": []
+},
+{
+"in": "H_1",
+"out": "𝐻₁",
+"warnings": []
+},
+{
+"in": "1-\\beta",
+"out": "1 − β",
+"warnings": []
+},
+{
+"in": "d",
+"out": "𝑑",
+"warnings": []
+},
+{
+"in": "t",
+"out": "𝑡",
+"warnings": []
+},
+{
+"in": "F",
+"out": "𝐹",
+"warnings": []
+},
+{
+"in": "z",
+"out": "𝑧",
+"warnings": []
+},
+{
+"in": "\\mathrm{CI}_{95\\%}",
+"out": "CI_(95%)",
+"warnings": [
+"Tiefstellung von '95%' nicht vollständig in Unicode verfügbar (fehlt: %) – Ersatzschreibweise verwendet."
+]
+},
+{
+"in": "N",
+"out": "𝑁",
+"warnings": []
+},
+{
+"in": "\\mathrm{df}",
+"out": "df",
+"warnings": []
+},
+{
+"in": "\\beta_0",
+"out": "β₀",
+"warnings": []
+},
+{
+"in": "\\beta_1,\\dots",
+"out": "β₁, …",
+"warnings": []
+},
+{
+"in": "u_i",
+"out": "𝑢ᵢ",
+"warnings": []
+},
+{
+"in": "v_k",
+"out": "𝑣ₖ",
+"warnings": []
+},
+{
+"in": "k",
+"out": "𝑘",
+"warnings": []
+},
+{
+"in": "i,j",
+"out": "𝑖, 𝑗",
+"warnings": []
+},
+{
+"in": "H(X)",
+"out": "𝐻(𝑋)",
+"warnings": []
+},
+{
+"in": "-\\sum_x p(x)\\log p(x)",
+"out": "−∑ₓ 𝑝(𝑥) log 𝑝(𝑥)",
+"warnings": []
+},
+{
+"in": "H(X \\mid Y)",
+"out": "𝐻(𝑋 ∣ 𝑌)",
+"warnings": []
+},
+{
+"in": "I(X;Y)",
+"out": "𝐼(𝑋; 𝑌)",
+"warnings": []
+},
+{
+"in": "D_{\\mathrm{KL}}(P \\parallel Q)",
+"out": "𝐷_(KL)(𝑃 ∥ 𝑄)",
+"warnings": [
+"Tiefstellung von 'KL' nicht vollständig in Unicode verfügbar (fehlt: K L) – Ersatzschreibweise verwendet."
+]
+},
+{
+"in": "Q",
+"out": "𝑄",
+"warnings": []
+},
+{
+"in": "-\\log p(x)",
+"out": "−log 𝑝(𝑥)",
+"warnings": []
+},
+{
+"in": "\\mathrm{PPL}",
+"out": "PPL",
+"warnings": []
+},
+{
+"in": "\\exp",
+"out": "exp",
+"warnings": []
+},
+{
+"in": "\\mathcal{L}(\\theta)",
+"out": "ℒ(θ)",
+"warnings": []
+},
+{
+"in": "\\mathcal{D}",
+"out": "𝒟",
+"warnings": []
+},
+{
+"in": "(x^{(i)}, y^{(i)})",
+"out": "(𝑥⁽ⁱ⁾, 𝑦⁽ⁱ⁾)",
+"warnings": []
+},
+{
+"in": "y",
+"out": "𝑦",
+"warnings": []
+},
+{
+"in": "\\hat{y}",
+"out": "𝑦̂",
+"warnings": []
+},
+{
+"in": "f_\\theta(x)",
+"out": "𝑓_θ(𝑥)",
+"warnings": [
+"Tiefstellung von 'θ' nicht vollständig in Unicode verfügbar (fehlt: θ) – Ersatzschreibweise verwendet."
+]
+},
+{
+"in": "\\theta \\leftarrow \\theta - \\eta \\nabla_\\theta \\mathcal{L}",
+"out": "θ ← θ − η∇_θℒ",
+"warnings": [
+"Tiefstellung von 'θ' nicht vollständig in Unicode verfügbar (fehlt: θ) – Ersatzschreibweise verwendet."
+]
+},
+{
+"in": "\\lambda \\lVert\\theta\\rVert^2",
+"out": "λ‖θ‖²",
+"warnings": []
+},
+{
+"in": "\\mathbf{h}",
+"out": "𝐡",
+"warnings": []
+},
+{
+"in": "h_t",
+"out": "ℎₜ",
+"warnings": []
+},
+{
+"in": "\\mathbf{W}",
+"out": "𝐖",
+"warnings": []
+},
+{
+"in": "\\mathbf{b}",
+"out": "𝐛",
+"warnings": []
+},
+{
+"in": "\\operatorname{Attention}(Q,K,V)",
+"out": "Attention(𝑄, 𝐾, 𝑉)",
+"warnings": []
+},
+{
+"in": "\\operatorname{softmax}\\!\\left(\\frac{QK^\\top}{\\sqrt{d_k}}\\right)V",
+"out": "softmax(𝑄𝐾ᵀ/√𝑑ₖ)𝑉",
+"warnings": [
+"Hochstellung: '⊤' durch Ersatzzeichen 'ᵀ' (U+1D40 MODIFIER LETTER CAPITAL T) dargestellt."
+]
+},
+{
+"in": "d_{\\text{model}}",
+"out": "𝑑_(model)",
+"warnings": [
+"Tiefstellung von 'model' nicht vollständig in Unicode verfügbar (fehlt: d) – Ersatzschreibweise verwendet."
+]
+},
+{
+"in": "\\mathcal{A}",
+"out": "𝒜",
+"warnings": []
+},
+{
+"in": "\\mathcal{L}",
+"out": "ℒ",
+"warnings": []
+},
+{
+"in": "\\mathcal{N}",
+"out": "𝒩",
+"warnings": []
+},
+{
+"in": "\\mathfrak{g}",
+"out": "𝔤",
+"warnings": []
+},
+{
+"in": "\\mathbb{E}",
+"out": "𝔼",
+"warnings": []
+},
+{
+"in": "\\mathbb{P}",
+"out": "ℙ",
+"warnings": []
+},
+{
+"in": "\\tilde{x}",
+"out": "𝑥̃",
+"warnings": []
+},
+{
+"in": "x'",
+"out": "𝑥′",
+"warnings": []
+},
+{
+"in": "x^*",
+"out": "𝑥*",
+"warnings": [
+"Hochstellung: '∗' durch Ersatzzeichen '*' (U+002A ASTERISK) dargestellt."
+]
+},
+{
+"in": "x_i",
+"out": "𝑥ᵢ",
+"warnings": []
+},
+{
+"in": "x^{(i)}",
+"out": "𝑥⁽ⁱ⁾",
+"warnings": []
+},
+{
+"in": "D_{\\text{formal}}",
+"out": "𝐷_(formal)",
+"warnings": [
+"Tiefstellung von 'formal' nicht vollständig in Unicode verfügbar (fehlt: f) – Ersatzschreibweise verwendet."
+]
+},
+{
+"in": "f(x;\\theta)",
+"out": "𝑓(𝑥; θ)",
+"warnings": []
+},
+{
+"in": "\\boxed{\\ \\ }",
+"out": "",
+"warnings": []
+},
+{
+"in": "\\underbrace{\\ldots}_{\\text{Text}}",
+"out": "…_(Text)",
+"warnings": [
+"Tiefstellung von 'Text' nicht vollständig in Unicode verfügbar (fehlt: T) – Ersatzschreibweise verwendet."
+]
+},
+{
+"in": "S",
+"out": "𝑆",
+"warnings": []
+},
+{
+"in": "G",
+"out": "𝐺",
+"warnings": []
+},
+{
+"in": "C",
+"out": "𝐶",
+"warnings": []
+},
+{
+"in": "R",
+"out": "𝑅",
+"warnings": []
+},
+{
+"in": "\\langle\\ \\rangle",
+"out": "⟨ ⟩",
+"warnings": []
+},
+{
+"in": "\\arg\\max_x",
+"out": "arg maxₓ",
+"warnings": []
+},
+{
+"in": "T",
+"out": "𝑇",
+"warnings": []
+},
+{
+"in": "E",
+"out": "𝐸",
+"warnings": []
+},
+{
+"in": "W",
+"out": "𝑊",
+"warnings": []
+},
+{
+"in": "A_H",
+"out": "𝐴_H",
+"warnings": [
+"Tiefstellung von 'H' nicht vollständig in Unicode verfügbar (fehlt: H) – Ersatzschreibweise verwendet."
+]
+},
+{
+"in": "P_H",
+"out": "𝑃_H",
+"warnings": [
+"Tiefstellung von 'H' nicht vollständig in Unicode verfügbar (fehlt: H) – Ersatzschreibweise verwendet."
+]
+},
+{
+"in": "A_M",
+"out": "𝐴_M",
+"warnings": [
+"Tiefstellung von 'M' nicht vollständig in Unicode verfügbar (fehlt: M) – Ersatzschreibweise verwendet."
+]
+},
+{
+"in": "P_M",
+"out": "𝑃_M",
+"warnings": [
+"Tiefstellung von 'M' nicht vollständig in Unicode verfügbar (fehlt: M) – Ersatzschreibweise verwendet."
+]
+},
+{
+"in": "y_i",
+"out": "𝑦ᵢ",
+"warnings": []
+},
+{
+"in": "\\epsilon_G",
+"out": "ϵ_G",
+"warnings": [
+"Tiefstellung von 'G' nicht vollständig in Unicode verfügbar (fehlt: G) – Ersatzschreibweise verwendet."
+]
+},
+{
+"in": "CL",
+"out": "𝐶𝐿",
+"warnings": []
+},
+{
+"in": "H",
+"out": "𝐻",
+"warnings": []
+},
+{
+"in": "M",
+"out": "𝑀",
+"warnings": []
+}
+]

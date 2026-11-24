@@ -1,0 +1,235 @@
+[
+{
+"in": "s_t \\in S_{phys} \\times S_{non-phys}",
+"out": "𝑠ₜ ∈ 𝑆_(phys) × 𝑆_(non−phys)",
+"warn": true
+},
+{
+"in": "s_t \\in S_{phys} \\times S_{non-phys}",
+"opts": {
+"lookalike": true
+},
+"out": "𝑠ₜ ∈ 𝑆ₚₕᵧₛ × 𝑆ₙₒₙ₋ₚₕᵧₛ",
+"warn": true
+},
+{
+"in": "s_t \\in S_{phys} \\times S_{non-phys}",
+"opts": {
+"unicode18": true
+},
+"out": "𝑠ₜ ∈ 𝑆ₚₕ₞ₛ × 𝑆ₙₒₙ₋ₚₕ₞ₛ",
+"warn": true
+},
+{
+"in": "w_{xyz}",
+"opts": {
+"unicode18": true
+},
+"out": "𝑤ₓ₞₟",
+"warn": true
+},
+{
+"in": "S_{phys}",
+"opts": {
+"unicode18": true,
+"lookalike": true
+},
+"out": "𝑆ₚₕ₞ₛ",
+"warn": true
+},
+{
+"in": "s_t \\in S_{\\text{phys}}",
+"opts": {
+"strict": true
+},
+"out": "𝑠ₜ ∈ 𝑆_(phys)",
+"warn": true
+},
+{
+"in": "E = mc^2",
+"out": "𝐸 = 𝑚𝑐²"
+},
+{
+"in": "E = mc^2",
+"opts": {
+"italic": false
+},
+"out": "E = mc²"
+},
+{
+"in": "\\sum_{i=1}^{n} x_i^2",
+"out": "∑ᵢ₌₁ⁿ 𝑥ᵢ²"
+},
+{
+"in": "f: \\mathbb{R}^n \\to \\mathbb{R}",
+"out": "𝑓 : ℝⁿ → ℝ"
+},
+{
+"in": "-x + y",
+"out": "−𝑥 + 𝑦"
+},
+{
+"in": "a + -b",
+"out": "𝑎 + −𝑏"
+},
+{
+"in": "P(A \\mid B)",
+"out": "𝑃(𝐴 ∣ 𝐵)"
+},
+{
+"in": "\\{x \\mid x > 0\\}",
+"out": "{𝑥 ∣ 𝑥 > 0}"
+},
+{
+"in": "x_{i,j}",
+"out": "𝑥ᵢ,ⱼ"
+},
+{
+"in": "a \\equiv b \\pmod{n}",
+"out": "𝑎 ≡ 𝑏 (mod 𝑛)"
+},
+{
+"in": "f'(x)",
+"out": "𝑓′(𝑥)"
+},
+{
+"in": "\\frac{1}{2}",
+"out": "½"
+},
+{
+"in": "\\frac{12}{7}",
+"out": "¹²⁄₇"
+},
+{
+"in": "\\frac{a+b}{2}",
+"out": "(𝑎 + 𝑏)/2"
+},
+{
+"in": "\\frac{\\partial f}{\\partial x}",
+"out": "∂𝑓/∂𝑥"
+},
+{
+"in": "\\sqrt{2}",
+"out": "√2"
+},
+{
+"in": "\\sqrt[3]{x}",
+"out": "∛𝑥"
+},
+{
+"in": "\\sqrt{x+1}",
+"out": "√(𝑥 + 1)"
+},
+{
+"in": "\\sin x",
+"out": "sin 𝑥"
+},
+{
+"in": "\\sin(x)",
+"out": "sin(𝑥)"
+},
+{
+"in": "\\int_0^1 f(x)\\,dx",
+"out": "∫₀¹ 𝑓(𝑥) 𝑑𝑥"
+},
+{
+"in": "\\lim_{x \\to 0}",
+"out": "lim_(x→0)",
+"warn": true
+},
+{
+"in": "\\alpha \\leq \\beta",
+"out": "α ≤ β"
+},
+{
+"in": "\\alpha \\leq \\beta",
+"opts": {
+"greekItalic": true
+},
+"out": "𝛼 ≤ 𝛽"
+},
+{
+"in": "x \\not\\in A",
+"out": "𝑥 ∉ 𝐴"
+},
+{
+"in": "\\bar{x}",
+"out": "𝑥̄"
+},
+{
+"in": "\\mathbf{v} \\cdot \\mathbf{w}",
+"out": "𝐯 ⋅ 𝐰"
+},
+{
+"in": "h",
+"out": "ℎ"
+},
+{
+"in": "\\mathbb{C} \\mathcal{B} \\mathfrak{R}",
+"out": "ℂℬℜ"
+},
+{
+"in": "\\not=, \\not\\subset",
+"out": "≠, ⊄"
+},
+{
+"in": "f(x) = (a + b)^2, x \\in [0, 1]",
+"out": "𝑓(𝑥) = (𝑎 + 𝑏)², 𝑥 ∈ [0, 1]"
+},
+{
+"in": "A \\approx B \\ \\land\\ B \\approx C \\ \\nRightarrow\\ A \\approx C",
+"out": "𝐴 ≈ 𝐵 ∧ 𝐵 ≈ 𝐶 ⇏ 𝐴 ≈ 𝐶"
+},
+{
+"in": "\\therefore\\ \\because\\ \\blacksquare\\ \\square",
+"out": "∴ ∵ ■ □"
+},
+{
+"in": "\\lVert x\\rVert_2",
+"out": "‖𝑥‖₂"
+},
+{
+"in": "\\lvert A \\rvert",
+"out": "|𝐴|"
+},
+{
+"in": "x \\xrightarrow{f} y",
+"out": "𝑥 →ᶠ 𝑦"
+},
+{
+"in": "A \\hookrightarrow B \\twoheadrightarrow C \\rightsquigarrow D",
+"out": "𝐴 ↪ 𝐵 ↠ 𝐶 ⇝ 𝐷"
+},
+{
+"in": "\\nsim \\ncong \\nless \\ngtr \\nleq \\ngeq \\nsubseteq \\nmid \\nparallel \\nrightarrow \\nLeftrightarrow \\nvdash \\nvDash",
+"out": "≁≇≮≯≰≱⊈∤∦↛⇎⊬⊭"
+},
+{
+"in": "\\binom{n}{k}",
+"out": "C(𝑛, 𝑘)",
+"warn": true
+},
+{
+"in": "A^\\top",
+"out": "𝐴ᵀ",
+"warn": true
+},
+{
+"in": "\\theta^*",
+"out": "θ*",
+"warn": true
+},
+{
+"in": "\\operatorname{softmax}\\!\\left(\\frac{QK^\\top}{\\sqrt{d_k}}\\right)V",
+"out": "softmax(𝑄𝐾ᵀ/√𝑑ₖ)𝑉",
+"warn": true
+},
+{
+"text": "Zustand $s_t \\in S$ kostet \\$5.",
+"out": "Zustand 𝑠ₜ ∈ 𝑆 kostet $5."
+},
+{
+"text": "Preis $5 und $10",
+"out": "Preis $5 und $10"
+}
+]

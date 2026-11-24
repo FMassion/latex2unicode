@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>LaTeX → Unicode</title>
+<style>
+  :root { --g1: #f4f4f4; --g2: #c6c6c6; --g3: #525252; }
+  * { box-sizing: border-box; }
+  html, body { background: #fff; color: #000; }
+  body { margin: 0; font-family: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+         font-size: 15px; line-height: 1.45; }
+  header { border-bottom: 1px solid var(--g2); padding: 10px 20px; display: flex; align-items: baseline; gap: 12px; }
+  header h1 { font-size: 17px; font-weight: 600; margin: 0; }
+  header span { color: var(--g3); font-size: 13px; }
+  main { max-width: 1200px; margin: 0 auto; padding: 16px 20px 32px; display: grid;
+         grid-template-columns: 1fr 1fr; gap: 16px; }
+  section { border: 1px solid var(--g2); min-width: 0; }
+  .wide { grid-column: 1 / -1; }
+  h2 { margin: 0; font-size: 13px; font-weight: 600; padding: 6px 10px; border-bottom: 1px solid var(--g2);
+       background: var(--g1); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  h2 .right { font-weight: 400; display: flex; gap: 12px; }
+  textarea { display: block; width: 100%; border: 0; padding: 10px; resize: vertical; min-height: 170px;
+             outline: none; background: #fff; color: #000; }
+  #in { font: 14px/1.5 "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace; }
+  #out { font: 21px/1.5 "STIX Two Math", "Cambria Math", "Latin Modern Math", "STIX Two Text", "Times New Roman", serif; }
+  .bar { display: flex; flex-wrap: wrap; gap: 6px 16px; padding: 7px 10px; border-top: 1px solid var(--g2);
+         align-items: center; font-size: 13px; }
+  .bar .grow { flex: 1; }
+  label { cursor: pointer; white-space: nowrap; }
+  input[type=checkbox], input[type=radio] { accent-color: #000; margin: 0 4px 0 0; vertical-align: -2px; }
+  button, select { font: inherit; font-size: 13px; color: #000; background: #fff; border: 1px solid #000;
+                   padding: 3px 10px; border-radius: 0; cursor: pointer; }
+  button:hover { background: var(--g1); }
+  button:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid #000; outline-offset: -2px; }
+  #status { color: var(--g3); }
+  #warn { margin: 0; padding: 8px 10px 8px 28px; font-size: 13px; }
+  #warn.empty { list-style: none; padding-left: 10px; color: var(--g3); }
+  #html-prev { padding: 10px; min-height: 48px; font: 21px/1.6 "STIX Two Text", "Times New Roman", serif; }
+  #html-src { min-height: 70px; font: 13px/1.5 "IBM Plex Mono", ui-monospace, Menlo, monospace; border-top: 1px solid var(--g2); }
+  #img { padding: 12px; overflow: auto; min-height: 70px; }
+  #img img { display: block; max-width: 100%; height: auto; }
+  .note { padding: 8px 10px; font-size: 13px; color: var(--g3); border-top: 1px solid var(--g2); }
+  details > summary { cursor: pointer; padding: 6px 10px; font-size: 13px; font-weight: 600; background: var(--g1); }
+  details[open] > summary { border-bottom: 1px solid var(--g2); }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { border-bottom: 1px solid var(--g2); padding: 4px 10px; text-align: left; vertical-align: top; }
+  th { font-weight: 600; }
+  td.code { font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace; white-space: nowrap; }
+  td.code button { border: 0; padding: 0; background: none; text-decoration: underline; font-family: inherit; }
+  td.res { white-space: nowrap; font-family: "STIX Two Math", "Cambria Math", "Latin Modern Math", "Times New Roman", serif; font-size: 17px; }
+  .refgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); }
+  .refgrid table { border-right: 1px solid var(--g2); }
+  .refgrid caption { text-align: left; font-weight: 600; padding: 6px 10px; border-bottom: 1px solid var(--g2); }
+  .help { padding: 8px 10px; font-size: 13px; }
+  .help p { margin: 4px 0 8px; }
+  footer { max-width: 1200px; margin: 0 auto; padding: 0 20px 24px; font-size: 12px; color: var(--g3); }
+  @media (max-width: 820px) { main { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>LaTeX → Unicode</h1>
+  <span>Formeln für LinkedIn, E-Mail und Chat · Version <span id="ver"></span></span>
+</header>
+
+<main>
+  <section>
+    <h2>Eingabe
+      <span class="right">
+        <label><input type="radio" name="mode" value="math" checked>Formel</label>
+        <label><input type="radio" name="mode" value="text">Text mit $…$</label>
+      </span>
+    </h2>
+    <textarea id="in" spellcheck="false" autocapitalize="off" autocomplete="off"
+      aria-label="LaTeX-Eingabe" placeholder="z. B. s_t \in S_{phys} \times S_{non-phys}"></textarea>
+    <div class="bar">
+      <label title="Einzelne Buchstaben kursiv wie in LaTeX (𝑥 statt x)"><input type="checkbox" id="o-italic" checked>Variablen kursiv</label>
+      <label title="𝛼 statt α"><input type="checkbox" id="o-greek">Griechisch kursiv</label>
+      <label title="Tiefgestelltes w, y, z aus Unicode 18.0 (September 2026). Viele Schriften und Geräte zeigen diese Zeichen noch nicht an."><input type="checkbox" id="o-u18">Unicode 18: &#x209D; &#x209E; &#x209F;</label>
+      <label title="Tiefgestelltes y als griechisches ᵧ (Gamma) – sieht anders aus als ein y"><input type="checkbox" id="o-y">y-Ersatz ᵧ</label>
+      <label title="Auch ᵀ für ⊤ und * für ∗ nicht verwenden"><input type="checkbox" id="o-strict">Strikt</label>
+      <span class="grow"></span>
+      <select id="examples" aria-label="Beispiel laden"><option value="">Beispiel laden …</option></select>
+    </div>
+  </section>
+
+  <section>
+    <h2>Ergebnis (Unicode-Text)
+      <span class="right"><span id="count"></span></span>
+    </h2>
+    <textarea id="out" readonly aria-label="Ergebnis"></textarea>
+    <div class="bar">
+      <button id="copy">Text kopieren</button>
+      <span id="status" aria-live="polite"></span>
+    </div>
+  </section>
+
+  <section class="wide">
+    <h2>Hinweise</h2>
+    <ul id="warn" class="empty"><li>Keine.</li></ul>
+  </section>
+
+  <section class="wide">
+    <h2>Bild (echte Hoch- und Tiefstellung, gestapelte Brüche)
+      <span class="right">
+        <label>Größe
+          <select id="size"><option value="32">klein</option><option value="48" selected>mittel</option><option value="72">groß</option></select>
+        </label>
+      </span>
+    </h2>
+    <div id="img" aria-label="Bildvorschau"></div>
+    <div class="bar">
+      <button id="png-copy">Bild kopieren</button>
+      <button id="png-save">PNG speichern</button>
+      <button id="svg-save">SVG speichern</button>
+      <span id="imgstatus" aria-live="polite"></span>
+    </div>
+    <div class="note">Das Vorschaubild lässt sich auch per Rechtsklick kopieren oder sichern und direkt in den Beitrag ziehen.<br>
+      Für Formeln, die Unicode nicht darstellen kann (z. B. tiefgestelltes y, Großbuchstaben im Index, Brüche):
+      Bild in den LinkedIn-Beitrag einfügen. Das Bild ist eine vereinfachte Nachbildung des LaTeX-Satzes.</div>
+  </section>
+
+  <section class="wide">
+    <h2>HTML (für Word, Pages, E-Mail, Webseiten)</h2>
+    <div id="html-prev" aria-label="HTML-Vorschau"></div>
+    <textarea id="html-src" readonly aria-label="HTML-Quelltext"></textarea>
+    <div class="bar">
+      <button id="html-copy">Formatiert kopieren</button>
+      <button id="html-src-copy">HTML-Quelltext kopieren</button>
+      <span id="htmlstatus" aria-live="polite"></span>
+    </div>
+    <div class="note">Echte Hoch- und Tiefstellung für alle Zeichen über &lt;sub&gt; und &lt;sup&gt;. „Formatiert kopieren“ fügt in Word, Pages,
+      Outlook oder Apple Mail als formatierter Text ein. LinkedIn-Beiträge sind reiner Text: Beim Einfügen geht die Formatierung verloren.</div>
+  </section>
+
+  <section class="wide">
+    <details>
+      <summary>Warum steht im Text 𝑆_(phys) statt einer Tiefstellung?</summary>
+      <div class="help">
+        <p>Unicode enthält tiefgestellte Buchstaben nur für a e h i j k l m n o p r s t u v x sowie β γ ρ φ χ.
+          Es fehlen b c d f g q w y z und alle Großbuchstaben. Hochgestellt fehlen q sowie C F Q S X Y Z.</p>
+        <p>Unicode 18.0 (September 2026) hat tiefgestelltes w, y, z ergänzt (U+209D–U+209F: &#x209D; &#x209E; &#x209F;).
+          Die Option „Unicode 18“ verwendet sie. Viele Schriften und Betriebssysteme zeigen diese Zeichen noch nicht an;
+          Leser sehen dann ein leeres Kästchen.</p>
+        <p>Ist ein Index nicht vollständig darstellbar, schreibt die App ihn in der Form <code>x_(…)</code> bzw. <code>x^(…)</code>
+          und mischt keine halb umgesetzten Indizes. Die Option „y-Ersatz ᵧ“ setzt für y das griechische Gamma ein;
+          das ist ein anderes Zeichen und sieht in vielen Schriften anders aus.</p>
+        <p>Text mit kursiven Mathematikbuchstaben ist für Screenreader und die LinkedIn-Suche schlechter lesbar.
+          Mit „Variablen kursiv“ aus bleiben Buchstaben normale ASCII-Zeichen.</p>
+      </div>
+    </details>
+  </section>
+
+  <section class="wide">
+    <details>
+      <summary>Kurzreferenz (Ergebnisse werden live berechnet; Befehl anklicken fügt ihn ein)</summary>
+      <div class="refgrid" id="ref"></div>
+    </details>
+  </section>
+</main>
+
+<footer>Die App läuft vollständig im Browser. Es werden keine Daten übertragen.</footer>
+
+<script src="tables.js"></script>
+<script src="converter.js"></script>
+<script src="render.js"></script>
+<script>
+(function () {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem("l2u." + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem("l2u." + k, JSON.stringify(v)); } catch (e) { /* kein Speicher */ } },
+  };
+
+  const EXAMPLES = [
+    ["Zustandsraum", "s_t \\in S_{\\text{phys}} \\times S_{\\text{non-phys}}"],
+    ["Summe", "\\sum_{i=1}^{n} x_i^2"],
+    ["Bayes", "P(A \\mid B) = \\frac{P(B \\mid A)\\,P(A)}{P(B)}"],
+    ["Attention", "\\operatorname{softmax}\\!\\left(\\frac{QK^\\top}{\\sqrt{d_k}}\\right)V"],
+    ["Normalverteilung", "X \\sim \\mathcal{N}(\\mu,\\sigma^2)"],
+    ["Gradientenabstieg", "\\theta \\leftarrow \\theta - \\eta \\nabla_\\theta \\mathcal{L}"],
+    ["KL-Divergenz", "D_{\\mathrm{KL}}(P \\parallel Q)"],
+    ["Nicht transitiv", "A \\approx B \\ \\land\\ B \\approx C \\ \\nRightarrow\\ A \\approx C"],
+    ["Text mit Formel", "Sei $s_t \\in S$ der Zustand und $\\pi(a_t \\mid s_t)$ die Policy."],
+  ];
+
+  // Einträge: Array = einzelne Befehle, Zeichenkette = Formel
+  const REF = [
+    ["Indizes", ["x_i", "x^2", "x_{i+1}^{n}", "x^{(i)}", "A^\\top", "f'(x)"]],
+    ["Griechisch", [["\\alpha", "\\beta", "\\gamma", "\\delta"], ["\\epsilon", "\\varepsilon", "\\theta"],
+      ["\\lambda", "\\mu", "\\pi", "\\sigma"], ["\\phi", "\\varphi", "\\omega"], ["\\Gamma", "\\Delta", "\\Sigma", "\\Omega"]]],
+    ["Mengen", [["\\in", "\\notin", "\\subseteq"], ["\\cup", "\\cap", "\\setminus"], ["\\varnothing", "\\times"],
+      ["\\mathbb{N}", "\\mathbb{R}", "\\mathbb{C}"], "\\{x \\mid x > 0\\}"]],
+    ["Logik", [["\\forall", "\\exists", "\\nexists"], ["\\land", "\\lor", "\\lnot"], ["\\Rightarrow", "\\Leftrightarrow", "\\nRightarrow"],
+      ["\\vdash", "\\models", "\\nvdash"], ["\\therefore", "\\because", "\\blacksquare"]]],
+    ["Relationen", [["\\leq", "\\geq", "\\neq"], ["\\approx", "\\not\\approx", "\\equiv"], ["\\sim", "\\simeq", "\\cong", "\\propto"],
+      ["\\ll", "\\gg", "\\prec", "\\succ"], ["\\perp", "\\parallel", "\\mid"]]],
+    ["Operatoren", [["\\sum", "\\prod", "\\int", "\\oint"], ["\\partial", "\\nabla", "\\infty"], ["\\cdot", "\\circ", "\\pm"],
+      ["\\oplus", "\\otimes", "\\odot"], "\\sin x + \\log_2 n"]],
+    ["Pfeile", [["\\to", "\\mapsto", "\\leftarrow"], ["\\hookrightarrow", "\\twoheadrightarrow"], ["\\rightsquigarrow", "\\nrightarrow"],
+      "x \\xrightarrow{f} y"]],
+    ["Schriften", [["\\mathbf{v}", "\\boldsymbol{\\theta}"], ["\\mathcal{L}", "\\mathcal{N}"], ["\\mathfrak{g}", "\\mathbb{E}"],
+      ["\\text{Text}", "\\operatorname{Var}(X)"]]],
+    ["Konstrukte", ["\\frac{a+b}{2}", "\\frac{1}{2}", "\\sqrt{x+1}", "\\sqrt[3]{x}", ["\\hat{x}", "\\bar{x}", "\\vec{v}"],
+      "\\lVert x\\rVert_2", "a \\equiv b \\pmod{n}"]],
+  ];
+
+  const ids = ["o-italic", "o-greek", "o-u18", "o-y", "o-strict"];
+  const mode = () => document.querySelector("input[name=mode]:checked").value;
+  const opts = () => ({ italic: $("o-italic").checked, greekItalic: $("o-greek").checked,
+                        unicode18: $("o-u18").checked, lookalike: $("o-y").checked, strict: $("o-strict").checked });
+
+  let lastSVG = "", seq = 0, lastUrl = "";
+
+  // Vorschau als PNG-Bild: per Rechtsklick kopier- und speicherbar, auch wo Downloads gesperrt sind
+  async function showPreview(svg) {
+    const my = ++seq;
+    if (!svg) { $("img").innerHTML = ""; return; }
+    try {
+      const blob = await svgToPng(svg, 2);
+      if (my !== seq) return;
+      if (lastUrl) URL.revokeObjectURL(lastUrl);
+      lastUrl = URL.createObjectURL(blob);
+      const w = +(svg.match(/width="(\d+)"/) || [0, 0])[1];
+      const img = document.createElement("img");
+      img.src = lastUrl; img.alt = "Formel als Bild"; if (w) img.width = w;
+      $("img").innerHTML = ""; $("img").appendChild(img);
+    } catch (e) {
+      if (my === seq) $("img").innerHTML = svg;
+    }
+  }
+
+  function update() {
+    const src = $("in").value;
+    const o = opts();
+    const text = mode() === "text";
+    const r = text ? L2U.convertText(src, o) : L2U.convert(src, o);
+    $("out").value = r.text;
+    $("count").textContent = Array.from(r.text).length + " Zeichen";
+    const ul = $("warn");
+    ul.innerHTML = "";
+    ul.className = r.warnings.length ? "" : "empty";
+    (r.warnings.length ? r.warnings : ["Keine."]).forEach((w) => {
+      const li = document.createElement("li"); li.textContent = w; ul.appendChild(li);
+    });
+    const ro = Object.assign({}, o, { rich: true });
+    const rich = text ? L2U.convertText(src, ro).text : L2U.convert(src, ro).text;
+    const html = src.trim() ? L2U.toHTML(src, o, text) : "";
+    $("html-prev").innerHTML = html;
+    $("html-src").value = html;
+    lastSVG = rich.trim() ? L2URender.toSVG(rich, { size: +$("size").value }) : "";
+    showPreview(lastSVG);
+    store.set("in", src); store.set("mode", mode()); store.set("size", $("size").value);
+    ids.forEach((id) => store.set(id, $(id).checked));
+  }
+
+  function flash(el, msg) {
+    el.textContent = msg;
+    clearTimeout(el._t);
+    el._t = setTimeout(() => { el.textContent = ""; }, 3000);
+  }
+
+  async function copyText() {
+    const t = $("out").value;
+    try { await navigator.clipboard.writeText(t); flash($("status"), "Kopiert."); }
+    catch (e) {
+      $("out").focus(); $("out").select();
+      try { document.execCommand("copy"); flash($("status"), "Kopiert."); }
+      catch (e2) { flash($("status"), "Kopieren nicht möglich – bitte markieren und kopieren."); }
+    }
+  }
+
+  async function copyHTML() {
+    const html = $("html-src").value, plain = $("out").value;
+    if (!html) return;
+    try {
+      if (!window.ClipboardItem || !navigator.clipboard || !navigator.clipboard.write) throw new Error("x");
+      await navigator.clipboard.write([new ClipboardItem({
+        "text/html": new Blob([html], { type: "text/html" }),
+        "text/plain": new Blob([plain], { type: "text/plain" }),
+      })]);
+      flash($("htmlstatus"), "Formatiert kopiert.");
+    } catch (e) {
+      // Ersatzweg: Vorschau markieren und kopieren
+      try {
+        const r = document.createRange(); r.selectNodeContents($("html-prev"));
+        const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+        const ok = document.execCommand("copy"); sel.removeAllRanges();
+        flash($("htmlstatus"), ok ? "Formatiert kopiert." : "Kopieren nicht möglich – Vorschau markieren und kopieren.");
+      } catch (e2) { flash($("htmlstatus"), "Kopieren nicht möglich – Vorschau markieren und kopieren."); }
+    }
+  }
+  async function copyHTMLSource() {
+    try { await navigator.clipboard.writeText($("html-src").value); flash($("htmlstatus"), "Quelltext kopiert."); }
+    catch (e) { $("html-src").select(); flash($("htmlstatus"), "Quelltext markiert – bitte kopieren."); }
+  }
+
+  function svgToPng(svg, scale) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        const c = document.createElement("canvas");
+        c.width = Math.ceil(img.width * scale); c.height = Math.ceil(img.height * scale);
+        const g = c.getContext("2d");
+        g.fillStyle = "#fff"; g.fillRect(0, 0, c.width, c.height);
+        g.scale(scale, scale); g.drawImage(img, 0, 0);
+        c.toBlob((b) => (b ? resolve(b) : reject(new Error("PNG konnte nicht erzeugt werden."))), "image/png");
+      };
+      img.onerror = () => reject(new Error("SVG konnte nicht gezeichnet werden."));
+      img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+    });
+  }
+
+  // In claude.ai-Artefakten laufen Downloads über die Plattform (Fähigkeit „downloads“),
+  // in der eigenständigen Datei über einen normalen Download-Link.
+  let dl = null;
+  if (window.claude && typeof window.claude.use === "function") {
+    window.claude.use("downloads").then((ns) => { dl = ns; }).catch(() => { dl = null; });
+  }
+  async function saveFile(blob, name, statusEl) {
+    if (dl) {
+      try { await dl.save({ filename: name, data: blob }); flash(statusEl, "Gespeichert."); }
+      catch (e) {
+        flash(statusEl, e && e.code === "declined" ? "Abgebrochen."
+          : "Speichern hier nicht möglich – Vorschaubild per Rechtsklick sichern.");
+      }
+      return;
+    }
+    download(blob, name); flash(statusEl, "Gespeichert.");
+  }
+
+  function download(blob, name) {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  }
+
+  async function copyPng() {
+    if (!lastSVG) return;
+    try {
+      if (!window.ClipboardItem || !navigator.clipboard || !navigator.clipboard.write) throw new Error("x");
+      await navigator.clipboard.write([new ClipboardItem({ "image/png": svgToPng(lastSVG, 2) })]);
+      flash($("imgstatus"), "Bild kopiert.");
+    } catch (e) {
+      flash($("imgstatus"), "Bild kopieren wird hier nicht unterstützt – bitte „PNG speichern“ verwenden.");
+    }
+  }
+
+  // Beispiele und Referenz
+  EXAMPLES.forEach(([name, src], i) => {
+    const op = document.createElement("option"); op.value = String(i); op.textContent = name; $("examples").appendChild(op);
+  });
+  $("examples").addEventListener("change", (e) => {
+    const ex = EXAMPLES[+e.target.value];
+    if (!ex) return;
+    const isText = ex[1].includes("$");
+    document.querySelector("input[name=mode][value=" + (isText ? "text" : "math") + "]").checked = true;
+    $("in").value = ex[1]; e.target.value = ""; update(); $("in").focus();
+  });
+
+  function insert(code) {
+    const ta = $("in");
+    const s = ta.selectionStart, e = ta.selectionEnd;
+    ta.value = ta.value.slice(0, s) + code + ta.value.slice(e);
+    ta.selectionStart = ta.selectionEnd = s + code.length;
+    ta.focus(); update();
+  }
+  REF.forEach(([title, items]) => {
+    const t = document.createElement("table");
+    const cap = document.createElement("caption"); cap.textContent = title; t.appendChild(cap);
+    items.forEach((entry) => {
+      const codes = Array.isArray(entry) ? entry : [entry];
+      const tr = document.createElement("tr");
+      const td1 = document.createElement("td"); td1.className = "code";
+      codes.forEach((code, i) => {
+        if (i) td1.appendChild(document.createTextNode(" "));
+        const b = document.createElement("button"); b.type = "button"; b.textContent = code;
+        b.addEventListener("click", () => insert(code)); td1.appendChild(b);
+      });
+      const td2 = document.createElement("td"); td2.className = "res";
+      td2.textContent = codes.map((c) => L2U.convert(c).text).join("  ");
+      tr.appendChild(td1); tr.appendChild(td2); t.appendChild(tr);
+    });
+    $("ref").appendChild(t);
+  });
+
+  // Zustand wiederherstellen
+  $("ver").textContent = L2U.VERSION;
+  $("in").value = store.get("in", EXAMPLES[0][1]);
+  const m = store.get("mode", "math");
+  const radio = document.querySelector("input[name=mode][value=" + (m === "text" ? "text" : "math") + "]");
+  if (radio) radio.checked = true;
+  $("size").value = store.get("size", "48");
+  ids.forEach((id) => { $(id).checked = store.get(id, id === "o-italic"); });
+
+  $("in").addEventListener("input", update);
+  document.querySelectorAll("input[name=mode], .bar input[type=checkbox]").forEach((el) => el.addEventListener("change", update));
+  $("size").addEventListener("change", update);
+  $("copy").addEventListener("click", copyText);
+  $("png-copy").addEventListener("click", copyPng);
+  $("html-copy").addEventListener("click", copyHTML);
+  $("html-src-copy").addEventListener("click", copyHTMLSource);
+  $("png-save").addEventListener("click", async () => {
+    if (!lastSVG) return;
+    try { await saveFile(await svgToPng(lastSVG, 2), "formel.png", $("imgstatus")); }
+    catch (e) { flash($("imgstatus"), e.message); }
+  });
+  $("svg-save").addEventListener("click", () => {
+    if (lastSVG) saveFile(new Blob([lastSVG], { type: "image/svg+xml" }), "formel.svg", $("imgstatus"));
+  });
+  update();
+})();
+</script>
+</body>
+</html>

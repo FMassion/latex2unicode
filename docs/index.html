@@ -1,0 +1,3158 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>LaTeX → Unicode</title>
+<style>
+  :root { --g1: #f4f4f4; --g2: #c6c6c6; --g3: #525252; }
+  * { box-sizing: border-box; }
+  html, body { background: #fff; color: #000; }
+  body { margin: 0; font-family: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+         font-size: 15px; line-height: 1.45; }
+  header { border-bottom: 1px solid var(--g2); padding: 10px 20px; display: flex; align-items: baseline; gap: 12px; }
+  header h1 { font-size: 17px; font-weight: 600; margin: 0; }
+  header span { color: var(--g3); font-size: 13px; }
+  main { max-width: 1200px; margin: 0 auto; padding: 16px 20px 32px; display: grid;
+         grid-template-columns: 1fr 1fr; gap: 16px; }
+  section { border: 1px solid var(--g2); min-width: 0; }
+  .wide { grid-column: 1 / -1; }
+  h2 { margin: 0; font-size: 13px; font-weight: 600; padding: 6px 10px; border-bottom: 1px solid var(--g2);
+       background: var(--g1); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  h2 .right { font-weight: 400; display: flex; gap: 12px; }
+  textarea { display: block; width: 100%; border: 0; padding: 10px; resize: vertical; min-height: 170px;
+             outline: none; background: #fff; color: #000; }
+  #in { font: 14px/1.5 "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace; }
+  #out { font: 21px/1.5 "STIX Two Math", "Cambria Math", "Latin Modern Math", "STIX Two Text", "Times New Roman", serif; }
+  .bar { display: flex; flex-wrap: wrap; gap: 6px 16px; padding: 7px 10px; border-top: 1px solid var(--g2);
+         align-items: center; font-size: 13px; }
+  .bar .grow { flex: 1; }
+  label { cursor: pointer; white-space: nowrap; }
+  input[type=checkbox], input[type=radio] { accent-color: #000; margin: 0 4px 0 0; vertical-align: -2px; }
+  button, select { font: inherit; font-size: 13px; color: #000; background: #fff; border: 1px solid #000;
+                   padding: 3px 10px; border-radius: 0; cursor: pointer; }
+  button:hover { background: var(--g1); }
+  button:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid #000; outline-offset: -2px; }
+  #status { color: var(--g3); }
+  #warn { margin: 0; padding: 8px 10px 8px 28px; font-size: 13px; }
+  #warn.empty { list-style: none; padding-left: 10px; color: var(--g3); }
+  #html-prev { padding: 10px; min-height: 48px; font: 21px/1.6 "STIX Two Text", "Times New Roman", serif; }
+  #html-src { min-height: 70px; font: 13px/1.5 "IBM Plex Mono", ui-monospace, Menlo, monospace; border-top: 1px solid var(--g2); }
+  #img { padding: 12px; overflow: auto; min-height: 70px; }
+  #img img { display: block; max-width: 100%; height: auto; }
+  .note { padding: 8px 10px; font-size: 13px; color: var(--g3); border-top: 1px solid var(--g2); }
+  details > summary { cursor: pointer; padding: 6px 10px; font-size: 13px; font-weight: 600; background: var(--g1); }
+  details[open] > summary { border-bottom: 1px solid var(--g2); }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { border-bottom: 1px solid var(--g2); padding: 4px 10px; text-align: left; vertical-align: top; }
+  th { font-weight: 600; }
+  td.code { font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace; white-space: nowrap; }
+  td.code button { border: 0; padding: 0; background: none; text-decoration: underline; font-family: inherit; }
+  td.res { white-space: nowrap; font-family: "STIX Two Math", "Cambria Math", "Latin Modern Math", "Times New Roman", serif; font-size: 17px; }
+  .refgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); }
+  .refgrid table { border-right: 1px solid var(--g2); }
+  .refgrid caption { text-align: left; font-weight: 600; padding: 6px 10px; border-bottom: 1px solid var(--g2); }
+  .help { padding: 8px 10px; font-size: 13px; }
+  .help p { margin: 4px 0 8px; }
+  footer { max-width: 1200px; margin: 0 auto; padding: 0 20px 24px; font-size: 12px; color: var(--g3); }
+  @media (max-width: 820px) { main { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>LaTeX → Unicode</h1>
+  <span>Formeln für LinkedIn, E-Mail und Chat · Version <span id="ver"></span></span>
+</header>
+
+<main>
+  <section>
+    <h2>Eingabe
+      <span class="right">
+        <label><input type="radio" name="mode" value="math" checked>Formel</label>
+        <label><input type="radio" name="mode" value="text">Text mit $…$</label>
+      </span>
+    </h2>
+    <textarea id="in" spellcheck="false" autocapitalize="off" autocomplete="off"
+      aria-label="LaTeX-Eingabe" placeholder="z. B. s_t \in S_{phys} \times S_{non-phys}"></textarea>
+    <div class="bar">
+      <label title="Einzelne Buchstaben kursiv wie in LaTeX (𝑥 statt x)"><input type="checkbox" id="o-italic" checked>Variablen kursiv</label>
+      <label title="𝛼 statt α"><input type="checkbox" id="o-greek">Griechisch kursiv</label>
+      <label title="Tiefgestelltes w, y, z aus Unicode 18.0 (September 2026). Viele Schriften und Geräte zeigen diese Zeichen noch nicht an."><input type="checkbox" id="o-u18">Unicode 18: &#x209D; &#x209E; &#x209F;</label>
+      <label title="Tiefgestelltes y als griechisches ᵧ (Gamma) – sieht anders aus als ein y"><input type="checkbox" id="o-y">y-Ersatz ᵧ</label>
+      <label title="Auch ᵀ für ⊤ und * für ∗ nicht verwenden"><input type="checkbox" id="o-strict">Strikt</label>
+      <span class="grow"></span>
+      <select id="examples" aria-label="Beispiel laden"><option value="">Beispiel laden …</option></select>
+    </div>
+  </section>
+
+  <section>
+    <h2>Ergebnis (Unicode-Text)
+      <span class="right"><span id="count"></span></span>
+    </h2>
+    <textarea id="out" readonly aria-label="Ergebnis"></textarea>
+    <div class="bar">
+      <button id="copy">Text kopieren</button>
+      <span id="status" aria-live="polite"></span>
+    </div>
+  </section>
+
+  <section class="wide">
+    <h2>Hinweise</h2>
+    <ul id="warn" class="empty"><li>Keine.</li></ul>
+  </section>
+
+  <section class="wide">
+    <h2>Bild (echte Hoch- und Tiefstellung, gestapelte Brüche)
+      <span class="right">
+        <label>Größe
+          <select id="size"><option value="32">klein</option><option value="48" selected>mittel</option><option value="72">groß</option></select>
+        </label>
+      </span>
+    </h2>
+    <div id="img" aria-label="Bildvorschau"></div>
+    <div class="bar">
+      <button id="png-copy">Bild kopieren</button>
+      <button id="png-save">PNG speichern</button>
+      <button id="svg-save">SVG speichern</button>
+      <span id="imgstatus" aria-live="polite"></span>
+    </div>
+    <div class="note">Das Vorschaubild lässt sich auch per Rechtsklick kopieren oder sichern und direkt in den Beitrag ziehen.<br>
+      Für Formeln, die Unicode nicht darstellen kann (z. B. tiefgestelltes y, Großbuchstaben im Index, Brüche):
+      Bild in den LinkedIn-Beitrag einfügen. Das Bild ist eine vereinfachte Nachbildung des LaTeX-Satzes.</div>
+  </section>
+
+  <section class="wide">
+    <h2>HTML (für Word, Pages, E-Mail, Webseiten)</h2>
+    <div id="html-prev" aria-label="HTML-Vorschau"></div>
+    <textarea id="html-src" readonly aria-label="HTML-Quelltext"></textarea>
+    <div class="bar">
+      <button id="html-copy">Formatiert kopieren</button>
+      <button id="html-src-copy">HTML-Quelltext kopieren</button>
+      <span id="htmlstatus" aria-live="polite"></span>
+    </div>
+    <div class="note">Echte Hoch- und Tiefstellung für alle Zeichen über &lt;sub&gt; und &lt;sup&gt;. „Formatiert kopieren“ fügt in Word, Pages,
+      Outlook oder Apple Mail als formatierter Text ein. LinkedIn-Beiträge sind reiner Text: Beim Einfügen geht die Formatierung verloren.</div>
+  </section>
+
+  <section class="wide">
+    <details>
+      <summary>Warum steht im Text 𝑆_(phys) statt einer Tiefstellung?</summary>
+      <div class="help">
+        <p>Unicode enthält tiefgestellte Buchstaben nur für a e h i j k l m n o p r s t u v x sowie β γ ρ φ χ.
+          Es fehlen b c d f g q w y z und alle Großbuchstaben. Hochgestellt fehlen q sowie C F Q S X Y Z.</p>
+        <p>Unicode 18.0 (September 2026) hat tiefgestelltes w, y, z ergänzt (U+209D–U+209F: &#x209D; &#x209E; &#x209F;).
+          Die Option „Unicode 18“ verwendet sie. Viele Schriften und Betriebssysteme zeigen diese Zeichen noch nicht an;
+          Leser sehen dann ein leeres Kästchen.</p>
+        <p>Ist ein Index nicht vollständig darstellbar, schreibt die App ihn in der Form <code>x_(…)</code> bzw. <code>x^(…)</code>
+          und mischt keine halb umgesetzten Indizes. Die Option „y-Ersatz ᵧ“ setzt für y das griechische Gamma ein;
+          das ist ein anderes Zeichen und sieht in vielen Schriften anders aus.</p>
+        <p>Text mit kursiven Mathematikbuchstaben ist für Screenreader und die LinkedIn-Suche schlechter lesbar.
+          Mit „Variablen kursiv“ aus bleiben Buchstaben normale ASCII-Zeichen.</p>
+      </div>
+    </details>
+  </section>
+
+  <section class="wide">
+    <details>
+      <summary>Kurzreferenz (Ergebnisse werden live berechnet; Befehl anklicken fügt ihn ein)</summary>
+      <div class="refgrid" id="ref"></div>
+    </details>
+  </section>
+</main>
+
+<footer>Die App läuft vollständig im Browser. Es werden keine Daten übertragen.</footer>
+
+<script>/* tables.js */
+// Automatisch erzeugt von tools/export_tables.py – nicht von Hand ändern.
+const L2U_TABLES = {
+ "ACCENTS": {
+  "acute": "\u0301",
+  "bar": "\u0304",
+  "breve": "\u0306",
+  "check": "\u030c",
+  "ddot": "\u0308",
+  "dot": "\u0307",
+  "grave": "\u0300",
+  "hat": "\u0302",
+  "overline": "\u0305",
+  "tilde": "\u0303",
+  "underline": "\u0332",
+  "vec": "\u20d7",
+  "widehat": "\u0302",
+  "widetilde": "\u0303"
+ },
+ "ARITY": {
+  "acute": 1,
+  "bar": 1,
+  "binom": 2,
+  "bm": 1,
+  "boldsymbol": 1,
+  "boxed": 1,
+  "breve": 1,
+  "cfrac": 2,
+  "check": 1,
+  "dbinom": 2,
+  "ddot": 1,
+  "dfrac": 2,
+  "dot": 1,
+  "frac": 2,
+  "grave": 1,
+  "hat": 1,
+  "mathbb": 1,
+  "mathbf": 1,
+  "mathcal": 1,
+  "mathfrak": 1,
+  "mathit": 1,
+  "mathop": 1,
+  "mathrm": 1,
+  "mathscr": 1,
+  "mathsf": 1,
+  "mathtt": 1,
+  "mbox": 1,
+  "operatorname": 1,
+  "overbrace": 1,
+  "overline": 1,
+  "overset": 2,
+  "pmod": 1,
+  "sqrt": 1,
+  "stackrel": 2,
+  "tbinom": 2,
+  "text": 1,
+  "textbf": 1,
+  "textit": 1,
+  "textnormal": 1,
+  "textrm": 1,
+  "textsf": 1,
+  "texttt": 1,
+  "textup": 1,
+  "tfrac": 2,
+  "tilde": 1,
+  "underbrace": 1,
+  "underline": 1,
+  "underset": 2,
+  "vec": 1,
+  "widehat": 1,
+  "widetilde": 1,
+  "xleftarrow": 1,
+  "xrightarrow": 1
+ },
+ "BIGS": [
+  "Big",
+  "Bigg",
+  "Biggl",
+  "Biggr",
+  "Bigl",
+  "Bigr",
+  "big",
+  "bigg",
+  "biggl",
+  "biggr",
+  "bigl",
+  "bigr"
+ ],
+ "CHR_TABLE": {
+  "!": [
+   "!",
+   "close"
+  ],
+  "'": [
+   "\u2032",
+   "ord"
+  ],
+  "(": [
+   "(",
+   "open"
+  ],
+  ")": [
+   ")",
+   "close"
+  ],
+  "*": [
+   "\u2217",
+   "bin"
+  ],
+  "+": [
+   "+",
+   "bin"
+  ],
+  ",": [
+   ",",
+   "punct"
+  ],
+  "-": [
+   "\u2212",
+   "bin"
+  ],
+  ".": [
+   ".",
+   "ord"
+  ],
+  "/": [
+   "/",
+   "ord"
+  ],
+  ":": [
+   ":",
+   "rel"
+  ],
+  ";": [
+   ";",
+   "punct"
+  ],
+  "<": [
+   "<",
+   "rel"
+  ],
+  "=": [
+   "=",
+   "rel"
+  ],
+  ">": [
+   ">",
+   "rel"
+  ],
+  "?": [
+   "?",
+   "close"
+  ],
+  "[": [
+   "[",
+   "open"
+  ],
+  "]": [
+   "]",
+   "close"
+  ],
+  "|": [
+   "|",
+   "ord"
+  ],
+  "~": [
+   "\u00a0",
+   "space"
+  ]
+ },
+ "CLASS_BY_CHAR": {
+  "#": "ord",
+  "$": "ord",
+  "%": "ord",
+  "&": "ord",
+  ":": "punct",
+  "_": "ord",
+  "{": "open",
+  "|": "ord",
+  "}": "close",
+  "\u00ac": "ord",
+  "\u00b0": "ord",
+  "\u00b1": "bin",
+  "\u00b7": "bin",
+  "\u00d7": "bin",
+  "\u00f7": "bin",
+  "\u2016": "ord",
+  "\u2020": "bin",
+  "\u2021": "bin",
+  "\u2026": "ord",
+  "\u2032": "ord",
+  "\u210f": "ord",
+  "\u2111": "ord",
+  "\u2113": "ord",
+  "\u2118": "ord",
+  "\u211c": "ord",
+  "\u2135": "ord",
+  "\u2190": "rel",
+  "\u2191": "rel",
+  "\u2192": "rel",
+  "\u2193": "rel",
+  "\u2194": "rel",
+  "\u219a": "rel",
+  "\u219b": "rel",
+  "\u21a0": "rel",
+  "\u21a6": "rel",
+  "\u21a9": "rel",
+  "\u21aa": "rel",
+  "\u21ae": "rel",
+  "\u21cd": "rel",
+  "\u21ce": "rel",
+  "\u21cf": "rel",
+  "\u21d0": "rel",
+  "\u21d2": "rel",
+  "\u21d4": "rel",
+  "\u21dd": "rel",
+  "\u2200": "ord",
+  "\u2201": "ord",
+  "\u2202": "ord",
+  "\u2203": "ord",
+  "\u2204": "ord",
+  "\u2205": "ord",
+  "\u2206": "ord",
+  "\u2207": "ord",
+  "\u2208": "rel",
+  "\u2209": "rel",
+  "\u220b": "rel",
+  "\u220f": "op",
+  "\u2210": "op",
+  "\u2211": "op",
+  "\u2212": "bin",
+  "\u2213": "bin",
+  "\u2216": "bin",
+  "\u2217": "bin",
+  "\u2218": "bin",
+  "\u2219": "bin",
+  "\u221d": "rel",
+  "\u221e": "ord",
+  "\u2220": "ord",
+  "\u2223": "rel",
+  "\u2224": "rel",
+  "\u2225": "rel",
+  "\u2226": "rel",
+  "\u2227": "bin",
+  "\u2228": "bin",
+  "\u2229": "bin",
+  "\u222a": "bin",
+  "\u222b": "op",
+  "\u222c": "op",
+  "\u222d": "op",
+  "\u222e": "op",
+  "\u2234": "rel",
+  "\u2235": "rel",
+  "\u223c": "rel",
+  "\u2241": "rel",
+  "\u2243": "rel",
+  "\u2245": "rel",
+  "\u2247": "rel",
+  "\u2248": "rel",
+  "\u224d": "rel",
+  "\u2250": "rel",
+  "\u2254": "rel",
+  "\u225c": "rel",
+  "\u2260": "rel",
+  "\u2261": "rel",
+  "\u2264": "rel",
+  "\u2265": "rel",
+  "\u226a": "rel",
+  "\u226b": "rel",
+  "\u226e": "rel",
+  "\u226f": "rel",
+  "\u2270": "rel",
+  "\u2271": "rel",
+  "\u227a": "rel",
+  "\u227b": "rel",
+  "\u2282": "rel",
+  "\u2283": "rel",
+  "\u2286": "rel",
+  "\u2287": "rel",
+  "\u2288": "rel",
+  "\u2289": "rel",
+  "\u228a": "rel",
+  "\u228e": "bin",
+  "\u2294": "bin",
+  "\u2295": "bin",
+  "\u2297": "bin",
+  "\u2299": "bin",
+  "\u22a2": "rel",
+  "\u22a4": "ord",
+  "\u22a5": "ord",
+  "\u22a8": "rel",
+  "\u22ac": "rel",
+  "\u22ad": "rel",
+  "\u22ae": "rel",
+  "\u22c0": "op",
+  "\u22c1": "op",
+  "\u22c2": "op",
+  "\u22c3": "op",
+  "\u22c5": "bin",
+  "\u22c6": "bin",
+  "\u22ee": "ord",
+  "\u22ef": "ord",
+  "\u22f1": "ord",
+  "\u2308": "open",
+  "\u2309": "close",
+  "\u230a": "open",
+  "\u230b": "close",
+  "\u25a0": "ord",
+  "\u25a1": "ord",
+  "\u25b3": "ord",
+  "\u2713": "ord",
+  "\u27e8": "open",
+  "\u27e9": "close",
+  "\u27f5": "rel",
+  "\u27f6": "rel",
+  "\u27f7": "rel",
+  "\u27f9": "rel",
+  "\u27fa": "rel",
+  "\u27fc": "rel",
+  "\u2a01": "op",
+  "\u2a02": "op"
+ },
+ "CONST": {
+  "FRACTION_SLASH": "\u2044",
+  "MINUS": "\u2212",
+  "NBSP": "\u00a0",
+  "NOT_OVERLAY": "\u0338",
+  "PRIME": "\u2032"
+ },
+ "FRACS": [
+  "cfrac",
+  "dfrac",
+  "frac",
+  "tfrac"
+ ],
+ "GREEK": {
+  "Delta": "\u0394",
+  "Gamma": "\u0393",
+  "Lambda": "\u039b",
+  "Omega": "\u03a9",
+  "Phi": "\u03a6",
+  "Pi": "\u03a0",
+  "Psi": "\u03a8",
+  "Sigma": "\u03a3",
+  "Theta": "\u0398",
+  "Upsilon": "\u03a5",
+  "Xi": "\u039e",
+  "alpha": "\u03b1",
+  "beta": "\u03b2",
+  "chi": "\u03c7",
+  "delta": "\u03b4",
+  "epsilon": "\u03f5",
+  "eta": "\u03b7",
+  "gamma": "\u03b3",
+  "iota": "\u03b9",
+  "kappa": "\u03ba",
+  "lambda": "\u03bb",
+  "mu": "\u03bc",
+  "nu": "\u03bd",
+  "omega": "\u03c9",
+  "omicron": "\u03bf",
+  "phi": "\u03d5",
+  "pi": "\u03c0",
+  "psi": "\u03c8",
+  "rho": "\u03c1",
+  "sigma": "\u03c3",
+  "tau": "\u03c4",
+  "theta": "\u03b8",
+  "upsilon": "\u03c5",
+  "varepsilon": "\u03b5",
+  "varphi": "\u03c6",
+  "varpi": "\u03d6",
+  "varrho": "\u03f1",
+  "varsigma": "\u03c2",
+  "vartheta": "\u03d1",
+  "xi": "\u03be",
+  "zeta": "\u03b6"
+ },
+ "LOOKALIKE_NAMES": {
+  "*": "ASTERISK",
+  ",": "COMMA",
+  "\u1d40": "MODIFIER LETTER CAPITAL T",
+  "\u1d67": "GREEK SUBSCRIPT SMALL LETTER GAMMA"
+ },
+ "NEGATE": {
+  "<": "\u226e",
+  "=": "\u2260",
+  ">": "\u226f",
+  "\u2190": "\u219a",
+  "\u2192": "\u219b",
+  "\u2194": "\u21ae",
+  "\u21d0": "\u21cd",
+  "\u21d2": "\u21cf",
+  "\u21d4": "\u21ce",
+  "\u2203": "\u2204",
+  "\u2208": "\u2209",
+  "\u2223": "\u2224",
+  "\u2225": "\u2226",
+  "\u223c": "\u2241",
+  "\u2245": "\u2247",
+  "\u2248": "\u2249",
+  "\u2261": "\u2262",
+  "\u2264": "\u2270",
+  "\u2265": "\u2271",
+  "\u2282": "\u2284",
+  "\u2283": "\u2285",
+  "\u2286": "\u2288",
+  "\u2287": "\u2289",
+  "\u22a2": "\u22ac",
+  "\u22a8": "\u22ad"
+ },
+ "OPNAMES": {
+  "Pr": "Pr",
+  "arccos": "arccos",
+  "arcsin": "arcsin",
+  "arctan": "arctan",
+  "arg": "arg",
+  "argmax": "argmax",
+  "argmin": "argmin",
+  "cos": "cos",
+  "cosh": "cosh",
+  "cot": "cot",
+  "coth": "coth",
+  "csc": "csc",
+  "deg": "deg",
+  "det": "det",
+  "dim": "dim",
+  "exp": "exp",
+  "gcd": "gcd",
+  "hom": "hom",
+  "inf": "inf",
+  "ker": "ker",
+  "lcm": "lcm",
+  "lg": "lg",
+  "lim": "lim",
+  "liminf": "liminf",
+  "limsup": "limsup",
+  "ln": "ln",
+  "log": "log",
+  "max": "max",
+  "min": "min",
+  "sec": "sec",
+  "sin": "sin",
+  "sinh": "sinh",
+  "sup": "sup",
+  "tan": "tan",
+  "tanh": "tanh"
+ },
+ "ROOTS": {
+  "2": "\u221a",
+  "3": "\u221b",
+  "4": "\u221c"
+ },
+ "SPACES": {
+  " ": " ",
+  "!": "",
+  ",": "\u2009",
+  ":": "\u205f",
+  ";": "\u2004",
+  ">": "\u205f",
+  "enspace": "\u2002",
+  "qquad": "\u2003\u2003",
+  "quad": "\u2003"
+ },
+ "SPREAD_ACCENTS": [
+  "overline",
+  "underline",
+  "widehat",
+  "widetilde"
+ ],
+ "STYLED": {
+  "bb": {
+   "0": "\ud835\udfd8",
+   "1": "\ud835\udfd9",
+   "2": "\ud835\udfda",
+   "3": "\ud835\udfdb",
+   "4": "\ud835\udfdc",
+   "5": "\ud835\udfdd",
+   "6": "\ud835\udfde",
+   "7": "\ud835\udfdf",
+   "8": "\ud835\udfe0",
+   "9": "\ud835\udfe1",
+   "A": "\ud835\udd38",
+   "B": "\ud835\udd39",
+   "C": "\u2102",
+   "D": "\ud835\udd3b",
+   "E": "\ud835\udd3c",
+   "F": "\ud835\udd3d",
+   "G": "\ud835\udd3e",
+   "H": "\u210d",
+   "I": "\ud835\udd40",
+   "J": "\ud835\udd41",
+   "K": "\ud835\udd42",
+   "L": "\ud835\udd43",
+   "M": "\ud835\udd44",
+   "N": "\u2115",
+   "O": "\ud835\udd46",
+   "P": "\u2119",
+   "Q": "\u211a",
+   "R": "\u211d",
+   "S": "\ud835\udd4a",
+   "T": "\ud835\udd4b",
+   "U": "\ud835\udd4c",
+   "V": "\ud835\udd4d",
+   "W": "\ud835\udd4e",
+   "X": "\ud835\udd4f",
+   "Y": "\ud835\udd50",
+   "Z": "\u2124",
+   "a": "\ud835\udd52",
+   "b": "\ud835\udd53",
+   "c": "\ud835\udd54",
+   "d": "\ud835\udd55",
+   "e": "\ud835\udd56",
+   "f": "\ud835\udd57",
+   "g": "\ud835\udd58",
+   "h": "\ud835\udd59",
+   "i": "\ud835\udd5a",
+   "j": "\ud835\udd5b",
+   "k": "\ud835\udd5c",
+   "l": "\ud835\udd5d",
+   "m": "\ud835\udd5e",
+   "n": "\ud835\udd5f",
+   "o": "\ud835\udd60",
+   "p": "\ud835\udd61",
+   "q": "\ud835\udd62",
+   "r": "\ud835\udd63",
+   "s": "\ud835\udd64",
+   "t": "\ud835\udd65",
+   "u": "\ud835\udd66",
+   "v": "\ud835\udd67",
+   "w": "\ud835\udd68",
+   "x": "\ud835\udd69",
+   "y": "\ud835\udd6a",
+   "z": "\ud835\udd6b"
+  },
+  "bold": {
+   "0": "\ud835\udfce",
+   "1": "\ud835\udfcf",
+   "2": "\ud835\udfd0",
+   "3": "\ud835\udfd1",
+   "4": "\ud835\udfd2",
+   "5": "\ud835\udfd3",
+   "6": "\ud835\udfd4",
+   "7": "\ud835\udfd5",
+   "8": "\ud835\udfd6",
+   "9": "\ud835\udfd7",
+   "A": "\ud835\udc00",
+   "B": "\ud835\udc01",
+   "C": "\ud835\udc02",
+   "D": "\ud835\udc03",
+   "E": "\ud835\udc04",
+   "F": "\ud835\udc05",
+   "G": "\ud835\udc06",
+   "H": "\ud835\udc07",
+   "I": "\ud835\udc08",
+   "J": "\ud835\udc09",
+   "K": "\ud835\udc0a",
+   "L": "\ud835\udc0b",
+   "M": "\ud835\udc0c",
+   "N": "\ud835\udc0d",
+   "O": "\ud835\udc0e",
+   "P": "\ud835\udc0f",
+   "Q": "\ud835\udc10",
+   "R": "\ud835\udc11",
+   "S": "\ud835\udc12",
+   "T": "\ud835\udc13",
+   "U": "\ud835\udc14",
+   "V": "\ud835\udc15",
+   "W": "\ud835\udc16",
+   "X": "\ud835\udc17",
+   "Y": "\ud835\udc18",
+   "Z": "\ud835\udc19",
+   "a": "\ud835\udc1a",
+   "b": "\ud835\udc1b",
+   "c": "\ud835\udc1c",
+   "d": "\ud835\udc1d",
+   "e": "\ud835\udc1e",
+   "f": "\ud835\udc1f",
+   "g": "\ud835\udc20",
+   "h": "\ud835\udc21",
+   "i": "\ud835\udc22",
+   "j": "\ud835\udc23",
+   "k": "\ud835\udc24",
+   "l": "\ud835\udc25",
+   "m": "\ud835\udc26",
+   "n": "\ud835\udc27",
+   "o": "\ud835\udc28",
+   "p": "\ud835\udc29",
+   "q": "\ud835\udc2a",
+   "r": "\ud835\udc2b",
+   "s": "\ud835\udc2c",
+   "t": "\ud835\udc2d",
+   "u": "\ud835\udc2e",
+   "v": "\ud835\udc2f",
+   "w": "\ud835\udc30",
+   "x": "\ud835\udc31",
+   "y": "\ud835\udc32",
+   "z": "\ud835\udc33",
+   "\u0391": "\ud835\udea8",
+   "\u0392": "\ud835\udea9",
+   "\u0393": "\ud835\udeaa",
+   "\u0394": "\ud835\udeab",
+   "\u0395": "\ud835\udeac",
+   "\u0396": "\ud835\udead",
+   "\u0397": "\ud835\udeae",
+   "\u0398": "\ud835\udeaf",
+   "\u0399": "\ud835\udeb0",
+   "\u039a": "\ud835\udeb1",
+   "\u039b": "\ud835\udeb2",
+   "\u039c": "\ud835\udeb3",
+   "\u039d": "\ud835\udeb4",
+   "\u039e": "\ud835\udeb5",
+   "\u039f": "\ud835\udeb6",
+   "\u03a0": "\ud835\udeb7",
+   "\u03a1": "\ud835\udeb8",
+   "\u03a3": "\ud835\udeba",
+   "\u03a4": "\ud835\udebb",
+   "\u03a5": "\ud835\udebc",
+   "\u03a6": "\ud835\udebd",
+   "\u03a7": "\ud835\udebe",
+   "\u03a8": "\ud835\udebf",
+   "\u03a9": "\ud835\udec0",
+   "\u03b1": "\ud835\udec2",
+   "\u03b2": "\ud835\udec3",
+   "\u03b3": "\ud835\udec4",
+   "\u03b4": "\ud835\udec5",
+   "\u03b5": "\ud835\udec6",
+   "\u03b6": "\ud835\udec7",
+   "\u03b7": "\ud835\udec8",
+   "\u03b8": "\ud835\udec9",
+   "\u03b9": "\ud835\udeca",
+   "\u03ba": "\ud835\udecb",
+   "\u03bb": "\ud835\udecc",
+   "\u03bc": "\ud835\udecd",
+   "\u03bd": "\ud835\udece",
+   "\u03be": "\ud835\udecf",
+   "\u03bf": "\ud835\uded0",
+   "\u03c0": "\ud835\uded1",
+   "\u03c1": "\ud835\uded2",
+   "\u03c2": "\ud835\uded3",
+   "\u03c3": "\ud835\uded4",
+   "\u03c4": "\ud835\uded5",
+   "\u03c5": "\ud835\uded6",
+   "\u03c6": "\ud835\uded7",
+   "\u03c7": "\ud835\uded8",
+   "\u03c8": "\ud835\uded9",
+   "\u03c9": "\ud835\udeda",
+   "\u03d1": "\ud835\udedd",
+   "\u03d5": "\ud835\udedf",
+   "\u03d6": "\ud835\udee1",
+   "\u03f1": "\ud835\udee0",
+   "\u03f5": "\ud835\udedc"
+  },
+  "bolditalic": {
+   "A": "\ud835\udc68",
+   "B": "\ud835\udc69",
+   "C": "\ud835\udc6a",
+   "D": "\ud835\udc6b",
+   "E": "\ud835\udc6c",
+   "F": "\ud835\udc6d",
+   "G": "\ud835\udc6e",
+   "H": "\ud835\udc6f",
+   "I": "\ud835\udc70",
+   "J": "\ud835\udc71",
+   "K": "\ud835\udc72",
+   "L": "\ud835\udc73",
+   "M": "\ud835\udc74",
+   "N": "\ud835\udc75",
+   "O": "\ud835\udc76",
+   "P": "\ud835\udc77",
+   "Q": "\ud835\udc78",
+   "R": "\ud835\udc79",
+   "S": "\ud835\udc7a",
+   "T": "\ud835\udc7b",
+   "U": "\ud835\udc7c",
+   "V": "\ud835\udc7d",
+   "W": "\ud835\udc7e",
+   "X": "\ud835\udc7f",
+   "Y": "\ud835\udc80",
+   "Z": "\ud835\udc81",
+   "a": "\ud835\udc82",
+   "b": "\ud835\udc83",
+   "c": "\ud835\udc84",
+   "d": "\ud835\udc85",
+   "e": "\ud835\udc86",
+   "f": "\ud835\udc87",
+   "g": "\ud835\udc88",
+   "h": "\ud835\udc89",
+   "i": "\ud835\udc8a",
+   "j": "\ud835\udc8b",
+   "k": "\ud835\udc8c",
+   "l": "\ud835\udc8d",
+   "m": "\ud835\udc8e",
+   "n": "\ud835\udc8f",
+   "o": "\ud835\udc90",
+   "p": "\ud835\udc91",
+   "q": "\ud835\udc92",
+   "r": "\ud835\udc93",
+   "s": "\ud835\udc94",
+   "t": "\ud835\udc95",
+   "u": "\ud835\udc96",
+   "v": "\ud835\udc97",
+   "w": "\ud835\udc98",
+   "x": "\ud835\udc99",
+   "y": "\ud835\udc9a",
+   "z": "\ud835\udc9b",
+   "\u0391": "\ud835\udf1c",
+   "\u0392": "\ud835\udf1d",
+   "\u0393": "\ud835\udf1e",
+   "\u0394": "\ud835\udf1f",
+   "\u0395": "\ud835\udf20",
+   "\u0396": "\ud835\udf21",
+   "\u0397": "\ud835\udf22",
+   "\u0398": "\ud835\udf23",
+   "\u0399": "\ud835\udf24",
+   "\u039a": "\ud835\udf25",
+   "\u039b": "\ud835\udf26",
+   "\u039c": "\ud835\udf27",
+   "\u039d": "\ud835\udf28",
+   "\u039e": "\ud835\udf29",
+   "\u039f": "\ud835\udf2a",
+   "\u03a0": "\ud835\udf2b",
+   "\u03a1": "\ud835\udf2c",
+   "\u03a3": "\ud835\udf2e",
+   "\u03a4": "\ud835\udf2f",
+   "\u03a5": "\ud835\udf30",
+   "\u03a6": "\ud835\udf31",
+   "\u03a7": "\ud835\udf32",
+   "\u03a8": "\ud835\udf33",
+   "\u03a9": "\ud835\udf34",
+   "\u03b1": "\ud835\udf36",
+   "\u03b2": "\ud835\udf37",
+   "\u03b3": "\ud835\udf38",
+   "\u03b4": "\ud835\udf39",
+   "\u03b5": "\ud835\udf3a",
+   "\u03b6": "\ud835\udf3b",
+   "\u03b7": "\ud835\udf3c",
+   "\u03b8": "\ud835\udf3d",
+   "\u03b9": "\ud835\udf3e",
+   "\u03ba": "\ud835\udf3f",
+   "\u03bb": "\ud835\udf40",
+   "\u03bc": "\ud835\udf41",
+   "\u03bd": "\ud835\udf42",
+   "\u03be": "\ud835\udf43",
+   "\u03bf": "\ud835\udf44",
+   "\u03c0": "\ud835\udf45",
+   "\u03c1": "\ud835\udf46",
+   "\u03c2": "\ud835\udf47",
+   "\u03c3": "\ud835\udf48",
+   "\u03c4": "\ud835\udf49",
+   "\u03c5": "\ud835\udf4a",
+   "\u03c6": "\ud835\udf4b",
+   "\u03c7": "\ud835\udf4c",
+   "\u03c8": "\ud835\udf4d",
+   "\u03c9": "\ud835\udf4e",
+   "\u03d1": "\ud835\udf51",
+   "\u03d5": "\ud835\udf53",
+   "\u03d6": "\ud835\udf55",
+   "\u03f1": "\ud835\udf54",
+   "\u03f5": "\ud835\udf50"
+  },
+  "cal": {
+   "A": "\ud835\udc9c",
+   "B": "\u212c",
+   "C": "\ud835\udc9e",
+   "D": "\ud835\udc9f",
+   "E": "\u2130",
+   "F": "\u2131",
+   "G": "\ud835\udca2",
+   "H": "\u210b",
+   "I": "\u2110",
+   "J": "\ud835\udca5",
+   "K": "\ud835\udca6",
+   "L": "\u2112",
+   "M": "\u2133",
+   "N": "\ud835\udca9",
+   "O": "\ud835\udcaa",
+   "P": "\ud835\udcab",
+   "Q": "\ud835\udcac",
+   "R": "\u211b",
+   "S": "\ud835\udcae",
+   "T": "\ud835\udcaf",
+   "U": "\ud835\udcb0",
+   "V": "\ud835\udcb1",
+   "W": "\ud835\udcb2",
+   "X": "\ud835\udcb3",
+   "Y": "\ud835\udcb4",
+   "Z": "\ud835\udcb5",
+   "a": "\ud835\udcb6",
+   "b": "\ud835\udcb7",
+   "c": "\ud835\udcb8",
+   "d": "\ud835\udcb9",
+   "e": "\u212f",
+   "f": "\ud835\udcbb",
+   "g": "\u210a",
+   "h": "\ud835\udcbd",
+   "i": "\ud835\udcbe",
+   "j": "\ud835\udcbf",
+   "k": "\ud835\udcc0",
+   "l": "\ud835\udcc1",
+   "m": "\ud835\udcc2",
+   "n": "\ud835\udcc3",
+   "o": "\u2134",
+   "p": "\ud835\udcc5",
+   "q": "\ud835\udcc6",
+   "r": "\ud835\udcc7",
+   "s": "\ud835\udcc8",
+   "t": "\ud835\udcc9",
+   "u": "\ud835\udcca",
+   "v": "\ud835\udccb",
+   "w": "\ud835\udccc",
+   "x": "\ud835\udccd",
+   "y": "\ud835\udcce",
+   "z": "\ud835\udccf"
+  },
+  "frak": {
+   "A": "\ud835\udd04",
+   "B": "\ud835\udd05",
+   "C": "\u212d",
+   "D": "\ud835\udd07",
+   "E": "\ud835\udd08",
+   "F": "\ud835\udd09",
+   "G": "\ud835\udd0a",
+   "H": "\u210c",
+   "I": "\u2111",
+   "J": "\ud835\udd0d",
+   "K": "\ud835\udd0e",
+   "L": "\ud835\udd0f",
+   "M": "\ud835\udd10",
+   "N": "\ud835\udd11",
+   "O": "\ud835\udd12",
+   "P": "\ud835\udd13",
+   "Q": "\ud835\udd14",
+   "R": "\u211c",
+   "S": "\ud835\udd16",
+   "T": "\ud835\udd17",
+   "U": "\ud835\udd18",
+   "V": "\ud835\udd19",
+   "W": "\ud835\udd1a",
+   "X": "\ud835\udd1b",
+   "Y": "\ud835\udd1c",
+   "Z": "\u2128",
+   "a": "\ud835\udd1e",
+   "b": "\ud835\udd1f",
+   "c": "\ud835\udd20",
+   "d": "\ud835\udd21",
+   "e": "\ud835\udd22",
+   "f": "\ud835\udd23",
+   "g": "\ud835\udd24",
+   "h": "\ud835\udd25",
+   "i": "\ud835\udd26",
+   "j": "\ud835\udd27",
+   "k": "\ud835\udd28",
+   "l": "\ud835\udd29",
+   "m": "\ud835\udd2a",
+   "n": "\ud835\udd2b",
+   "o": "\ud835\udd2c",
+   "p": "\ud835\udd2d",
+   "q": "\ud835\udd2e",
+   "r": "\ud835\udd2f",
+   "s": "\ud835\udd30",
+   "t": "\ud835\udd31",
+   "u": "\ud835\udd32",
+   "v": "\ud835\udd33",
+   "w": "\ud835\udd34",
+   "x": "\ud835\udd35",
+   "y": "\ud835\udd36",
+   "z": "\ud835\udd37"
+  },
+  "italic": {
+   "A": "\ud835\udc34",
+   "B": "\ud835\udc35",
+   "C": "\ud835\udc36",
+   "D": "\ud835\udc37",
+   "E": "\ud835\udc38",
+   "F": "\ud835\udc39",
+   "G": "\ud835\udc3a",
+   "H": "\ud835\udc3b",
+   "I": "\ud835\udc3c",
+   "J": "\ud835\udc3d",
+   "K": "\ud835\udc3e",
+   "L": "\ud835\udc3f",
+   "M": "\ud835\udc40",
+   "N": "\ud835\udc41",
+   "O": "\ud835\udc42",
+   "P": "\ud835\udc43",
+   "Q": "\ud835\udc44",
+   "R": "\ud835\udc45",
+   "S": "\ud835\udc46",
+   "T": "\ud835\udc47",
+   "U": "\ud835\udc48",
+   "V": "\ud835\udc49",
+   "W": "\ud835\udc4a",
+   "X": "\ud835\udc4b",
+   "Y": "\ud835\udc4c",
+   "Z": "\ud835\udc4d",
+   "a": "\ud835\udc4e",
+   "b": "\ud835\udc4f",
+   "c": "\ud835\udc50",
+   "d": "\ud835\udc51",
+   "e": "\ud835\udc52",
+   "f": "\ud835\udc53",
+   "g": "\ud835\udc54",
+   "h": "\u210e",
+   "i": "\ud835\udc56",
+   "j": "\ud835\udc57",
+   "k": "\ud835\udc58",
+   "l": "\ud835\udc59",
+   "m": "\ud835\udc5a",
+   "n": "\ud835\udc5b",
+   "o": "\ud835\udc5c",
+   "p": "\ud835\udc5d",
+   "q": "\ud835\udc5e",
+   "r": "\ud835\udc5f",
+   "s": "\ud835\udc60",
+   "t": "\ud835\udc61",
+   "u": "\ud835\udc62",
+   "v": "\ud835\udc63",
+   "w": "\ud835\udc64",
+   "x": "\ud835\udc65",
+   "y": "\ud835\udc66",
+   "z": "\ud835\udc67",
+   "\u0391": "\ud835\udee2",
+   "\u0392": "\ud835\udee3",
+   "\u0393": "\ud835\udee4",
+   "\u0394": "\ud835\udee5",
+   "\u0395": "\ud835\udee6",
+   "\u0396": "\ud835\udee7",
+   "\u0397": "\ud835\udee8",
+   "\u0398": "\ud835\udee9",
+   "\u0399": "\ud835\udeea",
+   "\u039a": "\ud835\udeeb",
+   "\u039b": "\ud835\udeec",
+   "\u039c": "\ud835\udeed",
+   "\u039d": "\ud835\udeee",
+   "\u039e": "\ud835\udeef",
+   "\u039f": "\ud835\udef0",
+   "\u03a0": "\ud835\udef1",
+   "\u03a1": "\ud835\udef2",
+   "\u03a3": "\ud835\udef4",
+   "\u03a4": "\ud835\udef5",
+   "\u03a5": "\ud835\udef6",
+   "\u03a6": "\ud835\udef7",
+   "\u03a7": "\ud835\udef8",
+   "\u03a8": "\ud835\udef9",
+   "\u03a9": "\ud835\udefa",
+   "\u03b1": "\ud835\udefc",
+   "\u03b2": "\ud835\udefd",
+   "\u03b3": "\ud835\udefe",
+   "\u03b4": "\ud835\udeff",
+   "\u03b5": "\ud835\udf00",
+   "\u03b6": "\ud835\udf01",
+   "\u03b7": "\ud835\udf02",
+   "\u03b8": "\ud835\udf03",
+   "\u03b9": "\ud835\udf04",
+   "\u03ba": "\ud835\udf05",
+   "\u03bb": "\ud835\udf06",
+   "\u03bc": "\ud835\udf07",
+   "\u03bd": "\ud835\udf08",
+   "\u03be": "\ud835\udf09",
+   "\u03bf": "\ud835\udf0a",
+   "\u03c0": "\ud835\udf0b",
+   "\u03c1": "\ud835\udf0c",
+   "\u03c2": "\ud835\udf0d",
+   "\u03c3": "\ud835\udf0e",
+   "\u03c4": "\ud835\udf0f",
+   "\u03c5": "\ud835\udf10",
+   "\u03c6": "\ud835\udf11",
+   "\u03c7": "\ud835\udf12",
+   "\u03c8": "\ud835\udf13",
+   "\u03c9": "\ud835\udf14",
+   "\u03d1": "\ud835\udf17",
+   "\u03d5": "\ud835\udf19",
+   "\u03d6": "\ud835\udf1b",
+   "\u03f1": "\ud835\udf1a",
+   "\u03f5": "\ud835\udf16"
+  },
+  "sf": {
+   "0": "\ud835\udfe2",
+   "1": "\ud835\udfe3",
+   "2": "\ud835\udfe4",
+   "3": "\ud835\udfe5",
+   "4": "\ud835\udfe6",
+   "5": "\ud835\udfe7",
+   "6": "\ud835\udfe8",
+   "7": "\ud835\udfe9",
+   "8": "\ud835\udfea",
+   "9": "\ud835\udfeb",
+   "A": "\ud835\udda0",
+   "B": "\ud835\udda1",
+   "C": "\ud835\udda2",
+   "D": "\ud835\udda3",
+   "E": "\ud835\udda4",
+   "F": "\ud835\udda5",
+   "G": "\ud835\udda6",
+   "H": "\ud835\udda7",
+   "I": "\ud835\udda8",
+   "J": "\ud835\udda9",
+   "K": "\ud835\uddaa",
+   "L": "\ud835\uddab",
+   "M": "\ud835\uddac",
+   "N": "\ud835\uddad",
+   "O": "\ud835\uddae",
+   "P": "\ud835\uddaf",
+   "Q": "\ud835\uddb0",
+   "R": "\ud835\uddb1",
+   "S": "\ud835\uddb2",
+   "T": "\ud835\uddb3",
+   "U": "\ud835\uddb4",
+   "V": "\ud835\uddb5",
+   "W": "\ud835\uddb6",
+   "X": "\ud835\uddb7",
+   "Y": "\ud835\uddb8",
+   "Z": "\ud835\uddb9",
+   "a": "\ud835\uddba",
+   "b": "\ud835\uddbb",
+   "c": "\ud835\uddbc",
+   "d": "\ud835\uddbd",
+   "e": "\ud835\uddbe",
+   "f": "\ud835\uddbf",
+   "g": "\ud835\uddc0",
+   "h": "\ud835\uddc1",
+   "i": "\ud835\uddc2",
+   "j": "\ud835\uddc3",
+   "k": "\ud835\uddc4",
+   "l": "\ud835\uddc5",
+   "m": "\ud835\uddc6",
+   "n": "\ud835\uddc7",
+   "o": "\ud835\uddc8",
+   "p": "\ud835\uddc9",
+   "q": "\ud835\uddca",
+   "r": "\ud835\uddcb",
+   "s": "\ud835\uddcc",
+   "t": "\ud835\uddcd",
+   "u": "\ud835\uddce",
+   "v": "\ud835\uddcf",
+   "w": "\ud835\uddd0",
+   "x": "\ud835\uddd1",
+   "y": "\ud835\uddd2",
+   "z": "\ud835\uddd3"
+  },
+  "tt": {
+   "0": "\ud835\udff6",
+   "1": "\ud835\udff7",
+   "2": "\ud835\udff8",
+   "3": "\ud835\udff9",
+   "4": "\ud835\udffa",
+   "5": "\ud835\udffb",
+   "6": "\ud835\udffc",
+   "7": "\ud835\udffd",
+   "8": "\ud835\udffe",
+   "9": "\ud835\udfff",
+   "A": "\ud835\ude70",
+   "B": "\ud835\ude71",
+   "C": "\ud835\ude72",
+   "D": "\ud835\ude73",
+   "E": "\ud835\ude74",
+   "F": "\ud835\ude75",
+   "G": "\ud835\ude76",
+   "H": "\ud835\ude77",
+   "I": "\ud835\ude78",
+   "J": "\ud835\ude79",
+   "K": "\ud835\ude7a",
+   "L": "\ud835\ude7b",
+   "M": "\ud835\ude7c",
+   "N": "\ud835\ude7d",
+   "O": "\ud835\ude7e",
+   "P": "\ud835\ude7f",
+   "Q": "\ud835\ude80",
+   "R": "\ud835\ude81",
+   "S": "\ud835\ude82",
+   "T": "\ud835\ude83",
+   "U": "\ud835\ude84",
+   "V": "\ud835\ude85",
+   "W": "\ud835\ude86",
+   "X": "\ud835\ude87",
+   "Y": "\ud835\ude88",
+   "Z": "\ud835\ude89",
+   "a": "\ud835\ude8a",
+   "b": "\ud835\ude8b",
+   "c": "\ud835\ude8c",
+   "d": "\ud835\ude8d",
+   "e": "\ud835\ude8e",
+   "f": "\ud835\ude8f",
+   "g": "\ud835\ude90",
+   "h": "\ud835\ude91",
+   "i": "\ud835\ude92",
+   "j": "\ud835\ude93",
+   "k": "\ud835\ude94",
+   "l": "\ud835\ude95",
+   "m": "\ud835\ude96",
+   "n": "\ud835\ude97",
+   "o": "\ud835\ude98",
+   "p": "\ud835\ude99",
+   "q": "\ud835\ude9a",
+   "r": "\ud835\ude9b",
+   "s": "\ud835\ude9c",
+   "t": "\ud835\ude9d",
+   "u": "\ud835\ude9e",
+   "v": "\ud835\ude9f",
+   "w": "\ud835\udea0",
+   "x": "\ud835\udea1",
+   "y": "\ud835\udea2",
+   "z": "\ud835\udea3"
+  }
+ },
+ "STYLES": {
+  "bm": "bolditalic",
+  "boldsymbol": "bolditalic",
+  "mathbb": "bb",
+  "mathbf": "bold",
+  "mathcal": "cal",
+  "mathfrak": "frak",
+  "mathit": "italic",
+  "mathrm": "rm",
+  "mathscr": "cal",
+  "mathsf": "sf",
+  "mathtt": "tt"
+ },
+ "SUB": {
+  "(": "\u208d",
+  ")": "\u208e",
+  "+": "\u208a",
+  "-": "\u208b",
+  "0": "\u2080",
+  "1": "\u2081",
+  "2": "\u2082",
+  "3": "\u2083",
+  "4": "\u2084",
+  "5": "\u2085",
+  "6": "\u2086",
+  "7": "\u2087",
+  "8": "\u2088",
+  "9": "\u2089",
+  "=": "\u208c",
+  "a": "\u2090",
+  "e": "\u2091",
+  "h": "\u2095",
+  "i": "\u1d62",
+  "j": "\u2c7c",
+  "k": "\u2096",
+  "l": "\u2097",
+  "m": "\u2098",
+  "n": "\u2099",
+  "o": "\u2092",
+  "p": "\u209a",
+  "r": "\u1d63",
+  "s": "\u209b",
+  "t": "\u209c",
+  "u": "\u1d64",
+  "v": "\u1d65",
+  "x": "\u2093",
+  "\u03b2": "\u1d66",
+  "\u03b3": "\u1d67",
+  "\u03c1": "\u1d68",
+  "\u03c6": "\u1d69",
+  "\u03c7": "\u1d6a",
+  "\u2212": "\u208b"
+ },
+ "SUB_LOOKALIKE": {
+  ",": ","
+ },
+ "SUB_UNICODE18": {
+  "w": "\u209d",
+  "y": "\u209e",
+  "z": "\u209f"
+ },
+ "SUB_Y_LOOKALIKE": {
+  "y": "\u1d67"
+ },
+ "SUP": {
+  "(": "\u207d",
+  ")": "\u207e",
+  "+": "\u207a",
+  "-": "\u207b",
+  "0": "\u2070",
+  "1": "\u00b9",
+  "2": "\u00b2",
+  "3": "\u00b3",
+  "4": "\u2074",
+  "5": "\u2075",
+  "6": "\u2076",
+  "7": "\u2077",
+  "8": "\u2078",
+  "9": "\u2079",
+  "=": "\u207c",
+  "A": "\u1d2c",
+  "B": "\u1d2e",
+  "D": "\u1d30",
+  "E": "\u1d31",
+  "G": "\u1d33",
+  "H": "\u1d34",
+  "I": "\u1d35",
+  "J": "\u1d36",
+  "K": "\u1d37",
+  "L": "\u1d38",
+  "M": "\u1d39",
+  "N": "\u1d3a",
+  "O": "\u1d3c",
+  "P": "\u1d3e",
+  "R": "\u1d3f",
+  "T": "\u1d40",
+  "U": "\u1d41",
+  "V": "\u2c7d",
+  "W": "\u1d42",
+  "a": "\u1d43",
+  "b": "\u1d47",
+  "c": "\u1d9c",
+  "d": "\u1d48",
+  "e": "\u1d49",
+  "f": "\u1da0",
+  "g": "\u1d4d",
+  "h": "\u02b0",
+  "i": "\u2071",
+  "j": "\u02b2",
+  "k": "\u1d4f",
+  "l": "\u02e1",
+  "m": "\u1d50",
+  "n": "\u207f",
+  "o": "\u1d52",
+  "p": "\u1d56",
+  "r": "\u02b3",
+  "s": "\u02e2",
+  "t": "\u1d57",
+  "u": "\u1d58",
+  "v": "\u1d5b",
+  "w": "\u02b7",
+  "x": "\u02e3",
+  "y": "\u02b8",
+  "z": "\u1dbb",
+  "\u03b1": "\u1d45",
+  "\u03b2": "\u1d5d",
+  "\u03b3": "\u1d5e",
+  "\u03b4": "\u1d5f",
+  "\u03b8": "\u1dbf",
+  "\u03c6": "\u1d60",
+  "\u03c7": "\u1d61",
+  "\u2032": "\u2032",
+  "\u2033": "\u2033",
+  "\u2212": "\u207b"
+ },
+ "SUP_LOOKALIKE": {
+  "*": "*",
+  ",": ",",
+  "\u2217": "*",
+  "\u22a4": "\u1d40"
+ },
+ "SYMBOLS": {
+  "#": [
+   "#",
+   "ord"
+  ],
+  "$": [
+   "$",
+   "ord"
+  ],
+  "%": [
+   "%",
+   "ord"
+  ],
+  "&": [
+   "&",
+   "ord"
+  ],
+  "Box": [
+   "\u25a1",
+   "ord"
+  ],
+  "Im": [
+   "\u2111",
+   "ord"
+  ],
+  "Leftarrow": [
+   "\u21d0",
+   "rel"
+  ],
+  "Leftrightarrow": [
+   "\u21d4",
+   "rel"
+  ],
+  "Longleftrightarrow": [
+   "\u27fa",
+   "rel"
+  ],
+  "Longrightarrow": [
+   "\u27f9",
+   "rel"
+  ],
+  "Re": [
+   "\u211c",
+   "ord"
+  ],
+  "Rightarrow": [
+   "\u21d2",
+   "rel"
+  ],
+  "Vert": [
+   "\u2016",
+   "ord"
+  ],
+  "_": [
+   "_",
+   "ord"
+  ],
+  "aleph": [
+   "\u2135",
+   "ord"
+  ],
+  "angle": [
+   "\u2220",
+   "ord"
+  ],
+  "approx": [
+   "\u2248",
+   "rel"
+  ],
+  "ast": [
+   "\u2217",
+   "bin"
+  ],
+  "asymp": [
+   "\u224d",
+   "rel"
+  ],
+  "because": [
+   "\u2235",
+   "rel"
+  ],
+  "bigcap": [
+   "\u22c2",
+   "op"
+  ],
+  "bigcup": [
+   "\u22c3",
+   "op"
+  ],
+  "bigoplus": [
+   "\u2a01",
+   "op"
+  ],
+  "bigotimes": [
+   "\u2a02",
+   "op"
+  ],
+  "bigvee": [
+   "\u22c1",
+   "op"
+  ],
+  "bigwedge": [
+   "\u22c0",
+   "op"
+  ],
+  "blacksquare": [
+   "\u25a0",
+   "ord"
+  ],
+  "bot": [
+   "\u22a5",
+   "ord"
+  ],
+  "bullet": [
+   "\u2219",
+   "bin"
+  ],
+  "cap": [
+   "\u2229",
+   "bin"
+  ],
+  "cdot": [
+   "\u22c5",
+   "bin"
+  ],
+  "cdots": [
+   "\u22ef",
+   "ord"
+  ],
+  "checkmark": [
+   "\u2713",
+   "ord"
+  ],
+  "circ": [
+   "\u2218",
+   "bin"
+  ],
+  "colon": [
+   ":",
+   "punct"
+  ],
+  "coloneqq": [
+   "\u2254",
+   "rel"
+  ],
+  "complement": [
+   "\u2201",
+   "ord"
+  ],
+  "cong": [
+   "\u2245",
+   "rel"
+  ],
+  "coprod": [
+   "\u2210",
+   "op"
+  ],
+  "cup": [
+   "\u222a",
+   "bin"
+  ],
+  "dagger": [
+   "\u2020",
+   "bin"
+  ],
+  "ddagger": [
+   "\u2021",
+   "bin"
+  ],
+  "ddots": [
+   "\u22f1",
+   "ord"
+  ],
+  "degree": [
+   "\u00b0",
+   "ord"
+  ],
+  "div": [
+   "\u00f7",
+   "bin"
+  ],
+  "doteq": [
+   "\u2250",
+   "rel"
+  ],
+  "dots": [
+   "\u2026",
+   "ord"
+  ],
+  "downarrow": [
+   "\u2193",
+   "rel"
+  ],
+  "ell": [
+   "\u2113",
+   "ord"
+  ],
+  "emptyset": [
+   "\u2205",
+   "ord"
+  ],
+  "equiv": [
+   "\u2261",
+   "rel"
+  ],
+  "exists": [
+   "\u2203",
+   "ord"
+  ],
+  "forall": [
+   "\u2200",
+   "ord"
+  ],
+  "ge": [
+   "\u2265",
+   "rel"
+  ],
+  "geq": [
+   "\u2265",
+   "rel"
+  ],
+  "gets": [
+   "\u2190",
+   "rel"
+  ],
+  "gg": [
+   "\u226b",
+   "rel"
+  ],
+  "hbar": [
+   "\u210f",
+   "ord"
+  ],
+  "hookleftarrow": [
+   "\u21a9",
+   "rel"
+  ],
+  "hookrightarrow": [
+   "\u21aa",
+   "rel"
+  ],
+  "iff": [
+   "\u27fa",
+   "rel"
+  ],
+  "iiint": [
+   "\u222d",
+   "op"
+  ],
+  "iint": [
+   "\u222c",
+   "op"
+  ],
+  "implies": [
+   "\u27f9",
+   "rel"
+  ],
+  "in": [
+   "\u2208",
+   "rel"
+  ],
+  "infty": [
+   "\u221e",
+   "ord"
+  ],
+  "int": [
+   "\u222b",
+   "op"
+  ],
+  "lVert": [
+   "\u2016",
+   "open"
+  ],
+  "land": [
+   "\u2227",
+   "bin"
+  ],
+  "langle": [
+   "\u27e8",
+   "open"
+  ],
+  "lbrace": [
+   "{",
+   "open"
+  ],
+  "lceil": [
+   "\u2308",
+   "open"
+  ],
+  "ldots": [
+   "\u2026",
+   "ord"
+  ],
+  "le": [
+   "\u2264",
+   "rel"
+  ],
+  "leadsto": [
+   "\u21dd",
+   "rel"
+  ],
+  "leftarrow": [
+   "\u2190",
+   "rel"
+  ],
+  "leftrightarrow": [
+   "\u2194",
+   "rel"
+  ],
+  "leq": [
+   "\u2264",
+   "rel"
+  ],
+  "lfloor": [
+   "\u230a",
+   "open"
+  ],
+  "ll": [
+   "\u226a",
+   "rel"
+  ],
+  "lnot": [
+   "\u00ac",
+   "ord"
+  ],
+  "longleftarrow": [
+   "\u27f5",
+   "rel"
+  ],
+  "longleftrightarrow": [
+   "\u27f7",
+   "rel"
+  ],
+  "longmapsto": [
+   "\u27fc",
+   "rel"
+  ],
+  "longrightarrow": [
+   "\u27f6",
+   "rel"
+  ],
+  "lor": [
+   "\u2228",
+   "bin"
+  ],
+  "lvert": [
+   "|",
+   "open"
+  ],
+  "mapsto": [
+   "\u21a6",
+   "rel"
+  ],
+  "mid": [
+   "\u2223",
+   "rel"
+  ],
+  "models": [
+   "\u22a8",
+   "rel"
+  ],
+  "mp": [
+   "\u2213",
+   "bin"
+  ],
+  "nLeftarrow": [
+   "\u21cd",
+   "rel"
+  ],
+  "nLeftrightarrow": [
+   "\u21ce",
+   "rel"
+  ],
+  "nRightarrow": [
+   "\u21cf",
+   "rel"
+  ],
+  "nVdash": [
+   "\u22ae",
+   "rel"
+  ],
+  "nabla": [
+   "\u2207",
+   "ord"
+  ],
+  "ncong": [
+   "\u2247",
+   "rel"
+  ],
+  "ne": [
+   "\u2260",
+   "rel"
+  ],
+  "neg": [
+   "\u00ac",
+   "ord"
+  ],
+  "neq": [
+   "\u2260",
+   "rel"
+  ],
+  "nexists": [
+   "\u2204",
+   "ord"
+  ],
+  "ngeq": [
+   "\u2271",
+   "rel"
+  ],
+  "ngtr": [
+   "\u226f",
+   "rel"
+  ],
+  "ni": [
+   "\u220b",
+   "rel"
+  ],
+  "nleftarrow": [
+   "\u219a",
+   "rel"
+  ],
+  "nleftrightarrow": [
+   "\u21ae",
+   "rel"
+  ],
+  "nleq": [
+   "\u2270",
+   "rel"
+  ],
+  "nless": [
+   "\u226e",
+   "rel"
+  ],
+  "nmid": [
+   "\u2224",
+   "rel"
+  ],
+  "notin": [
+   "\u2209",
+   "rel"
+  ],
+  "nparallel": [
+   "\u2226",
+   "rel"
+  ],
+  "nrightarrow": [
+   "\u219b",
+   "rel"
+  ],
+  "nsim": [
+   "\u2241",
+   "rel"
+  ],
+  "nsubseteq": [
+   "\u2288",
+   "rel"
+  ],
+  "nsupseteq": [
+   "\u2289",
+   "rel"
+  ],
+  "nvDash": [
+   "\u22ad",
+   "rel"
+  ],
+  "nvdash": [
+   "\u22ac",
+   "rel"
+  ],
+  "odot": [
+   "\u2299",
+   "bin"
+  ],
+  "oint": [
+   "\u222e",
+   "op"
+  ],
+  "oplus": [
+   "\u2295",
+   "bin"
+  ],
+  "otimes": [
+   "\u2297",
+   "bin"
+  ],
+  "parallel": [
+   "\u2225",
+   "rel"
+  ],
+  "partial": [
+   "\u2202",
+   "ord"
+  ],
+  "perp": [
+   "\u22a5",
+   "rel"
+  ],
+  "pm": [
+   "\u00b1",
+   "bin"
+  ],
+  "prec": [
+   "\u227a",
+   "rel"
+  ],
+  "prime": [
+   "\u2032",
+   "ord"
+  ],
+  "prod": [
+   "\u220f",
+   "op"
+  ],
+  "propto": [
+   "\u221d",
+   "rel"
+  ],
+  "qed": [
+   "\u25a0",
+   "ord"
+  ],
+  "rVert": [
+   "\u2016",
+   "close"
+  ],
+  "rangle": [
+   "\u27e9",
+   "close"
+  ],
+  "rbrace": [
+   "}",
+   "close"
+  ],
+  "rceil": [
+   "\u2309",
+   "close"
+  ],
+  "rfloor": [
+   "\u230b",
+   "close"
+  ],
+  "rightarrow": [
+   "\u2192",
+   "rel"
+  ],
+  "rightsquigarrow": [
+   "\u21dd",
+   "rel"
+  ],
+  "rvert": [
+   "|",
+   "close"
+  ],
+  "setminus": [
+   "\u2216",
+   "bin"
+  ],
+  "sim": [
+   "\u223c",
+   "rel"
+  ],
+  "simeq": [
+   "\u2243",
+   "rel"
+  ],
+  "sqcup": [
+   "\u2294",
+   "bin"
+  ],
+  "square": [
+   "\u25a1",
+   "ord"
+  ],
+  "star": [
+   "\u22c6",
+   "bin"
+  ],
+  "subset": [
+   "\u2282",
+   "rel"
+  ],
+  "subseteq": [
+   "\u2286",
+   "rel"
+  ],
+  "subsetneq": [
+   "\u228a",
+   "rel"
+  ],
+  "succ": [
+   "\u227b",
+   "rel"
+  ],
+  "sum": [
+   "\u2211",
+   "op"
+  ],
+  "supset": [
+   "\u2283",
+   "rel"
+  ],
+  "supseteq": [
+   "\u2287",
+   "rel"
+  ],
+  "therefore": [
+   "\u2234",
+   "rel"
+  ],
+  "times": [
+   "\u00d7",
+   "bin"
+  ],
+  "to": [
+   "\u2192",
+   "rel"
+  ],
+  "top": [
+   "\u22a4",
+   "ord"
+  ],
+  "triangle": [
+   "\u25b3",
+   "ord"
+  ],
+  "triangleq": [
+   "\u225c",
+   "rel"
+  ],
+  "twoheadrightarrow": [
+   "\u21a0",
+   "rel"
+  ],
+  "uparrow": [
+   "\u2191",
+   "rel"
+  ],
+  "uplus": [
+   "\u228e",
+   "bin"
+  ],
+  "varnothing": [
+   "\u2205",
+   "ord"
+  ],
+  "vdash": [
+   "\u22a2",
+   "rel"
+  ],
+  "vdots": [
+   "\u22ee",
+   "ord"
+  ],
+  "vee": [
+   "\u2228",
+   "bin"
+  ],
+  "vert": [
+   "|",
+   "ord"
+  ],
+  "wedge": [
+   "\u2227",
+   "bin"
+  ],
+  "wp": [
+   "\u2118",
+   "ord"
+  ],
+  "{": [
+   "{",
+   "open"
+  ],
+  "|": [
+   "\u2016",
+   "ord"
+  ],
+  "}": [
+   "}",
+   "close"
+  ]
+ },
+ "TEXTS": {
+  "mbox": null,
+  "text": null,
+  "textbf": "bold",
+  "textit": "italic",
+  "textnormal": null,
+  "textrm": null,
+  "textsf": "sf",
+  "texttt": "tt",
+  "textup": null
+ },
+ "VERSION": "1.2.0",
+ "VULGAR": {
+  "1/10": "\u2152",
+  "1/2": "\u00bd",
+  "1/3": "\u2153",
+  "1/4": "\u00bc",
+  "1/5": "\u2155",
+  "1/6": "\u2159",
+  "1/7": "\u2150",
+  "1/8": "\u215b",
+  "1/9": "\u2151",
+  "2/3": "\u2154",
+  "2/5": "\u2156",
+  "3/4": "\u00be",
+  "3/5": "\u2157",
+  "3/8": "\u215c",
+  "4/5": "\u2158",
+  "5/6": "\u215a",
+  "5/8": "\u215d",
+  "7/8": "\u215e"
+ }
+};
+if (typeof module !== 'undefined') module.exports = L2U_TABLES;
+
+</script>
+<script>/* converter.js */
+/*
+ * latex2unicode – JavaScript-Fassung (gleiche Logik wie latex2unicode.py).
+ *
+ * convert(latex, opts)      -> { text, warnings }   Unicode-Klartext
+ * convertText(text, opts)   -> { text, warnings }   Fließtext mit $…$
+ * convert(latex, {rich:true}) liefert eine Zwischendarstellung mit
+ * Steuerzeichen (Private Use Area) für den Bild-Export (render.js).
+ *
+ * Die Zeichentabellen stammen aus tables.js (erzeugt aus Python/unicodedata).
+ */
+(function (root) {
+  "use strict";
+  const T = (typeof L2U_TABLES !== "undefined") ? L2U_TABLES : require("./tables.js");
+
+  const O = "ord", OP = "op", B = "bin", R = "rel", OPEN = "open", CLOSE = "close", P = "punct", SP = "space";
+  const C = T.CONST;
+
+  // Steuerzeichen für die Bilddarstellung
+  const MK = {
+    sub: "\uE000", sup: "\uE001", end: "\uE002", frac: "\uE003", mid: "\uE004",
+    under: "\uE005", over: "\uE006", sqrt: "\uE007", rootidx: "\uE008", binom: "\uE009",
+    delim: "\uE00A", it: "\uE00B",
+  };
+  const MK_RE = /[\uE000-\uE00F]/;
+
+  const LIMIT_OPS = new Set(["sum", "prod", "coprod", "bigcup", "bigcap", "bigvee", "bigwedge",
+    "bigoplus", "bigotimes", "lim", "liminf", "limsup", "max", "min", "sup", "inf", "det", "gcd",
+    "Pr", "argmax", "argmin", "underbrace", "overbrace"]);
+  const SPREAD = new Set(T.SPREAD_ACCENTS);
+  const FRACS = new Set(T.FRACS);
+  const BIGS = new Set(T.BIGS);
+
+  const has = (obj, k) => Object.prototype.hasOwnProperty.call(obj, k);
+  const cps = (s) => Array.from(s);
+  const isSpace = (c) => /^\s$/u.test(c);
+  const DIGITS = /^[0-9]+$/;
+
+  function styled(ch, style) {
+    if (!style || style === "rm") return ch;
+    const m = T.STYLED[style];
+    return (m && has(m, ch)) ? m[ch] : ch;
+  }
+
+  function isGreek(c) {
+    const cp = c.codePointAt(0);
+    return (cp >= 0x370 && cp <= 0x3FF && !(cp >= 0x3E2 && cp <= 0x3EF)) ||
+      (cp >= 0x1F00 && cp <= 0x1FFF) || (cp >= 0x1D26 && cp <= 0x1D2A) || (cp >= 0x1D66 && cp <= 0x1D6A);
+  }
+  const isLower = (c) => c === c.toLowerCase() && c !== c.toUpperCase();
+
+  // ------------------------------------------------------------------ Tokenizer
+  function tokenize(s) {
+    const re = /\\([A-Za-z]+)\*?|\\([\s\S])|(\s+)|([\s\S])/gu;
+    const out = [];
+    let m;
+    while ((m = re.exec(s)) !== null) {
+      if (m[1] !== undefined) out.push(["cmd", m[1]]);
+      else if (m[2] !== undefined) out.push(["cmd", m[2]]);
+      else if (m[3] !== undefined) out.push(["ws", m[3]]);
+      else out.push(["chr", m[4]]);
+    }
+    return out;
+  }
+
+  // ------------------------------------------------------------------ Parser
+  class Parser {
+    constructor(toks, warn) { this.t = toks; this.i = 0; this.warn = warn; }
+    peek() { return this.i < this.t.length ? this.t[this.i] : null; }
+    take() { const t = this.peek(); this.i++; return t; }
+    is(tok, kind, val) { return tok !== null && tok[0] === kind && tok[1] === val; }
+    skipWs() { while (this.peek() !== null && this.peek()[0] === "ws") this.i++; }
+
+    seq(closing) {
+      const nodes = [];
+      for (;;) {
+        const tok = this.peek();
+        if (tok === null) {
+          if (closing) this.warn("Fehlende schließende Klammer '}'.");
+          return nodes;
+        }
+        if (this.is(tok, "chr", "}")) {
+          this.i++;
+          if (closing) return nodes;
+          this.warn("Überzählige Klammer '}' ignoriert.");
+          continue;
+        }
+        if (tok[0] === "chr" && (tok[1] === "^" || tok[1] === "_")) {
+          this.i++;
+          const arg = this.arg();
+          let j = nodes.length - 1;
+          while (j >= 0 && nodes[j][0] === "ws") j--;
+          let base = j >= 0 ? nodes[j] : null;
+          nodes.splice(Math.max(j, 0));
+          const slot = tok[1] === "_" ? 2 : 3;
+          if (!(base !== null && base[0] === "scripts" && base[slot] === null)) {
+            base = ["scripts", base, null, null];
+          }
+          base[slot] = arg;
+          nodes.push(base);
+          continue;
+        }
+        nodes.push(this.node());
+      }
+    }
+
+    arg() {
+      this.skipWs();
+      const tok = this.peek();
+      if (tok === null) { this.warn("Argument fehlt am Ende der Formel."); return []; }
+      if (this.is(tok, "chr", "{")) { this.i++; return this.seq(true); }
+      return [this.node()];
+    }
+
+    node() {
+      const [kind, val] = this.take();
+      if (kind === "ws") return ["ws", val];
+      if (kind === "chr") {
+        if (val === "{") return ["group", this.seq(true)];
+        return ["chr", val];
+      }
+      const name = val;
+      if (name === "left" || name === "right" || name === "middle" || BIGS.has(name)) {
+        this.skipWs();
+        return ["delim", name, this.take()];
+      }
+      if (name === "not") {
+        this.skipWs();
+        return ["not", this.peek() !== null ? this.node() : ["chr", ""]];
+      }
+      let opt = null;
+      if (name === "sqrt" || name === "xrightarrow" || name === "xleftarrow") {
+        this.skipWs();
+        if (this.is(this.peek(), "chr", "[")) {
+          this.i++;
+          opt = [];
+          while (this.peek() !== null && !this.is(this.peek(), "chr", "]")) opt.push(this.node());
+          this.i++;
+        }
+      }
+      const n = has(T.ARITY, name) ? T.ARITY[name] : 0;
+      const args = [];
+      for (let k = 0; k < n; k++) args.push(this.arg());
+      return ["cmd", name, args, opt];
+    }
+  }
+
+  // ------------------------------------------------------------------ Kontext
+  function makeCtx(opts) { return { opts, style: null, script: false, text: false, rich: !!opts.rich }; }
+  const withCtx = (ctx, kw) => Object.assign({}, ctx, kw);
+
+  // HTML-Ausgabe: Kursivschrift als <i> statt als mathematischer Kursivbuchstabe
+  const italicOf = (c, ctx) => (ctx.opts.html ? MK.it + c + MK.end : styled(c, "italic"));
+  function letter(c, ctx) {
+    if (ctx.style) return styled(c, ctx.style);
+    if (ctx.text || (ctx.script && !ctx.rich) || !ctx.opts.italic) return c;
+    return italicOf(c, ctx);
+  }
+  function greek(c, ctx) {
+    if (ctx.style) return styled(c, ctx.style);
+    if (!ctx.text && (!ctx.script || ctx.rich) && ctx.opts.greekItalic && isLower(c)) return italicOf(c, ctx);
+    return c;
+  }
+
+  // ------------------------------------------------------------------ Ausgabe
+  function render(nodes, ctx) {
+    const atoms = [];
+    for (const nd of nodes) for (const a of renderNode(nd, ctx)) atoms.push(a);
+    return atoms;
+  }
+
+  function renderNode(nd, ctx) {
+    switch (nd[0]) {
+      case "ws": return ctx.text ? [[" ", SP]] : [];
+      case "chr": return chrAtoms(nd[1], ctx);
+      case "group": return [[join(render(nd[1], ctx), ctx), O]];
+      case "scripts": return renderScripts(nd, ctx);
+      case "delim": return renderDelim(nd, ctx);
+      case "not": {
+        const atoms = renderNode(nd[1], ctx);
+        const t = atoms.length ? atoms[0][0] : "";
+        return [[has(T.NEGATE, t) ? T.NEGATE[t] : t + C.NOT_OVERLAY, R]];
+      }
+      default: return renderCmd(nd, ctx);
+    }
+  }
+
+  function chrAtoms(c, ctx) {
+    if (c === "") return [];
+    if (ctx.text) return [[/^\p{L}$/u.test(c) ? letter(c, ctx) : c, O]];
+    if (/^[A-Za-z]$/.test(c)) return [[letter(c, ctx), O]];
+    if (/^[0-9]$/.test(c)) return [[styled(c, ctx.style), O]];
+    if (c === "&") return [];
+    if (has(T.CHR_TABLE, c)) return [T.CHR_TABLE[c].slice()];
+    if (isGreek(c)) return [[greek(c, ctx), O]];
+    return [[c, has(T.CLASS_BY_CHAR, c) ? T.CLASS_BY_CHAR[c] : O]];
+  }
+
+  function renderCmd(nd, ctx) {
+    const [, name, args, opt] = nd;
+    const w = (m) => ctx.opts.warn(m);
+    if (has(T.GREEK, name)) return [[greek(T.GREEK[name], ctx), O]];
+    if (has(T.SYMBOLS, name)) {
+      const [ch, cls] = T.SYMBOLS[name];
+      return [LIMIT_OPS.has(name) ? [ch, cls, "limits"] : [ch, cls]];
+    }
+    if (has(T.SPACES, name)) return [[T.SPACES[name], SP]];
+    if (name === "\\") return [["\n", SP]];
+    if (has(T.OPNAMES, name)) return [LIMIT_OPS.has(name) ? [T.OPNAMES[name], OP, "limits"] : [T.OPNAMES[name], OP]];
+    if (name === "bmod") return [["mod", B]];
+    if (name === "pmod") return [[" (mod " + join(render(args[0], ctx), ctx) + ")", O]];
+    if (name === "operatorname") return [[join(render(args[0], withCtx(ctx, { style: "rm" })), ctx), OP]];
+    if (name === "mathop") return [[join(render(args[0], ctx), ctx), OP]];
+    if (has(T.STYLES, name)) return render(args[0], withCtx(ctx, { style: T.STYLES[name] }));
+    if (has(T.TEXTS, name)) {
+      const tctx = withCtx(ctx, { text: true, style: T.TEXTS[name] });
+      return [[render(args[0], tctx).map((a) => a[0]).join(""), O]];
+    }
+    if (FRACS.has(name)) return [[frac(args, ctx), O]];
+    if (name === "sqrt") return [[sqrt(args[0], opt, ctx), O]];
+    if (has(T.ACCENTS, name)) return [[accent(name, args[0], ctx), O]];
+    if (name === "overset" || name === "stackrel" || name === "underset") {
+      let base = render(args[1], ctx);
+      if (!base.length) base = [["", O]];
+      const kind = name === "underset" ? "sub" : "sup";
+      base[base.length - 1][0] += attach(args[0], ctx, ctx.rich ? (kind === "sub" ? "under" : "over") : kind);
+      return base;
+    }
+    if (name === "xrightarrow" || name === "xleftarrow") {
+      const arrow = T.SYMBOLS[name === "xrightarrow" ? "rightarrow" : "leftarrow"][0];
+      if (opt && !ctx.rich) w("\\" + name + ": Beschriftung unter dem Pfeil wird angehängt.");
+      const label = args[0].length ? attach(args[0], ctx, ctx.rich ? "over" : "sup") : "";
+      const below = opt ? attach(opt, ctx, ctx.rich ? "under" : "sub") : "";
+      return [[arrow + below + label, R]];
+    }
+    if (name === "underbrace" || name === "overbrace") return [[join(render(args[0], ctx), ctx), O, "limits"]];
+    if (name === "binom" || name === "dbinom" || name === "tbinom") {
+      const [n, k] = args.map((a) => join(render(a, ctx), ctx));
+      if (ctx.rich && !ctx.script) return [[MK.binom + n + MK.mid + k + MK.end, O]];
+      w("\\binom ist im Klartext nicht stapelbar – als C(n, k) geschrieben.");
+      return [["C(" + n + ", " + k + ")", O]];
+    }
+    if (name === "boxed") return render(args[0], ctx);
+    w("Unbekannter Befehl \\" + name + " – unverändert übernommen.");
+    return [["\\" + name, O]];
+  }
+
+  function renderScripts(nd, ctx) {
+    const [, base, sub, sup] = nd;
+    let atoms = base !== null ? renderNode(base, ctx) : [];
+    if (!atoms.length) atoms = [["", O]];
+    const last = atoms[atoms.length - 1];
+    const limits = ctx.rich && !ctx.script && last[2] === "limits";
+    let suffix = "";
+    if (sub !== null) suffix += attach(sub, ctx, ctx.rich ? (limits ? "under" : "sub") : "sub");
+    if (sup !== null) suffix += attach(sup, ctx, ctx.rich ? (limits ? "over" : "sup") : "sup");
+    last[0] += suffix;
+    return atoms;
+  }
+
+  function renderDelim(nd, ctx) {
+    const [, name, tok] = nd;
+    if (tok === null || tok === undefined || (tok[0] === "chr" && tok[1] === ".")) return [];
+    const atoms = tok[0] === "chr" ? chrAtoms(tok[1], ctx) : renderCmd(["cmd", tok[1], [], null], ctx);
+    let cls = null;
+    if (name === "left" || name.endsWith("l")) cls = OPEN;
+    else if (name === "right" || name.endsWith("r")) cls = CLOSE;
+    else if (name === "middle") cls = R;
+    if (cls) for (const a of atoms) a[1] = cls;
+    // Bilddarstellung: Begrenzer an die Höhe des Inhalts anpassen
+    if (ctx.rich && !ctx.script) for (const a of atoms) if (a[0]) a[0] = MK.delim + a[0] + MK.end;
+    return atoms;
+  }
+
+  function mapScript(s, kind, opts) {
+    let table = kind === "sup" ? T.SUP : T.SUB;
+    if (kind === "sub" && opts.unicode18) table = Object.assign({}, table, T.SUB_UNICODE18);
+    let look = kind === "sup" ? T.SUP_LOOKALIKE : T.SUB_LOOKALIKE;
+    if (kind === "sub" && opts.lookalike) look = Object.assign({}, look, T.SUB_Y_LOOKALIKE);
+    const out = [], missing = [], used = [];
+    for (const ch of cps(s)) {
+      if (has(table, ch)) out.push(table[ch]);
+      else if (!opts.strict && has(look, ch)) {
+        out.push(look[ch]);
+        if (ch !== "," && ch !== "*") used.push([ch, look[ch]]);
+      } else missing.push(ch);
+    }
+    if (missing.length) return [null, missing, used];
+    return [out.join(""), [], used];
+  }
+
+  const hex4 = (c) => c.codePointAt(0).toString(16).toUpperCase().padStart(4, "0");
+  const sortCp = (arr) => Array.from(new Set(arr)).sort((a, b) => a.codePointAt(0) - b.codePointAt(0));
+
+  function attach(nodes, ctx, kind) {
+    const sctx = withCtx(ctx, { script: true });
+    const s = join(render(nodes, sctx), sctx);
+    if (ctx.rich) return MK[kind] + s + MK.end;
+    const [mapped, missing, used] = mapScript(s, kind, ctx.opts);
+    const word = kind === "sub" ? "Tiefstellung" : "Hochstellung";
+    if (mapped !== null) {
+      const u18 = Object.values(T.SUB_UNICODE18);
+      if (kind === "sub" && cps(mapped).some((c) => u18.includes(c))) {
+        ctx.opts.warn("Tiefstellung nutzt Zeichen aus Unicode 18.0 (" + u18.join(" ") +
+          " für w, y, z); viele Schriften und Geräte zeigen sie noch nicht an.");
+      }
+      for (const [orig, rep] of used) {
+        ctx.opts.warn(word + ": '" + orig + "' durch Ersatzzeichen '" + rep + "' (U+" + hex4(rep) + " " +
+          T.LOOKALIKE_NAMES[rep] + ") dargestellt.");
+      }
+      return mapped;
+    }
+    ctx.opts.warn(word + " von '" + s + "' nicht vollständig in Unicode verfügbar (fehlt: " +
+      sortCp(missing).join(" ") + ") – Ersatzschreibweise verwendet.");
+    const mark = kind === "sub" ? "_" : "^";
+    return mark + (cps(s).length === 1 ? s : "(" + s + ")");
+  }
+
+  function simple(atoms) {
+    return atoms.length > 0 && atoms.every((a) => a[1] === O) &&
+      !atoms.some((a) => cps(a[0]).some(isSpace));
+  }
+
+  function frac(args, ctx) {
+    const na = render(args[0], ctx), da = render(args[1], ctx);
+    const n = join(na, ctx), d = join(da, ctx);
+    if (ctx.script) return n + "/" + d;
+    if (ctx.rich) return MK.frac + n + MK.mid + d + MK.end;
+    if (DIGITS.test(n) && DIGITS.test(d)) {
+      const key = n + "/" + d;
+      if (has(T.VULGAR, key)) return T.VULGAR[key];
+      return cps(n).map((c) => T.SUP[c]).join("") + C.FRACTION_SLASH + cps(d).map((c) => T.SUB[c]).join("");
+    }
+    return (simple(na) ? n : "(" + n + ")") + "/" + (simple(da) ? d : "(" + d + ")");
+  }
+
+  function sqrt(arg, opt, ctx) {
+    const atoms = render(arg, ctx);
+    let body = join(atoms, ctx);
+    if (ctx.rich && !ctx.script) {
+      let pre = "";
+      if (opt) {
+        const sctx = withCtx(ctx, { script: true });
+        const idx = join(render(opt, sctx), sctx);
+        pre = MK.rootidx + idx + MK.end;
+      }
+      return pre + MK.sqrt + body + MK.end;
+    }
+    if (!((atoms.length === 1 && simple(atoms)) || DIGITS.test(body))) body = "(" + body + ")";
+    if (!opt) return T.ROOTS["2"] + body;
+    const sctx = withCtx(ctx, { script: true });
+    const idx = join(render(opt, sctx), sctx);
+    if (has(T.ROOTS, idx)) return T.ROOTS[idx] + body;
+    const [mapped] = mapScript(idx, "sup", ctx.opts);
+    return (mapped !== null ? mapped : "(" + idx + ")") + T.ROOTS["2"] + body;
+  }
+
+  function accent(name, arg, ctx) {
+    const mark = T.ACCENTS[name];
+    const text = join(render(arg, ctx), ctx);
+    const clusters = [];
+    for (const ch of cps(text)) {
+      if (clusters.length && /^\p{M}$/u.test(ch)) clusters[clusters.length - 1] += ch;
+      else clusters.push(ch);
+    }
+    const real = clusters.filter((c) => !MK_RE.test(c));
+    if (real.length > 1 && !SPREAD.has(name)) {
+      ctx.opts.warn("\\" + name + " über mehrere Zeichen: Akzent auf jedes Zeichen gesetzt.");
+    }
+    return clusters.map((c) => (isSpace(c) || MK_RE.test(c)) ? c : c + mark).join("");
+  }
+
+  function gap(a, b) {
+    if ((a === R && b === R) || b === P || a === OPEN || b === CLOSE) return "";
+    if (a === B || b === B || a === R || b === R) return " ";
+    if (a === P) return " ";
+    if (a === OP && (b === O || b === OP)) return " ";
+    if (b === OP && (a === O || a === CLOSE || a === OP)) return " ";
+    return "";
+  }
+
+  function join(atoms, ctx) {
+    if (ctx.text) return atoms.map((a) => a[0]).join("");
+    if (ctx.script) return atoms.filter((a) => a[1] !== SP).map((a) => a[0]).join("");
+    const real = [];
+    atoms.forEach((a, k) => { if (a[1] !== SP) real.push(k); });
+    const cls = {};
+    for (const k of real) cls[k] = atoms[k][1];
+    const unary = new Set();
+    real.forEach((k, idx) => {
+      if (cls[k] === B) {
+        const prev = idx > 0 ? cls[real[idx - 1]] : null;
+        const nxt = idx + 1 < real.length ? cls[real[idx + 1]] : null;
+        if ([null, B, OP, R, OPEN, P].includes(prev) || [null, R, CLOSE, P].includes(nxt)) {
+          cls[k] = O;
+          unary.add(k); // Vorzeichen: kein Abstand zum Folgenden
+        }
+      }
+    });
+    let out = "", prevK = null;
+    atoms.forEach((a, k) => {
+      const text = a[0], c = a[1];
+      if (c === SP) { out += text; prevK = null; return; }
+      if (prevK !== null && text) {
+        const g = unary.has(prevK) ? "" : gap(cls[prevK], cls[k]);
+        const lastCh = out.length ? cps(out).pop() : "";
+        if (g && out && !isSpace(lastCh) && !isSpace(cps(text)[0])) out += g;
+      }
+      out += text;
+      if (text) prevK = k;
+    });
+    return out;
+  }
+
+  // ------------------------------------------------------------------ Schnittstelle
+  function normOpts(o) {
+    o = o || {};
+    const warnings = [];
+    return {
+      italic: o.italic !== false, greekItalic: !!o.greekItalic, strict: !!o.strict,
+      lookalike: !!o.lookalike && !o.strict, unicode18: !!o.unicode18,
+      rich: !!o.rich || !!o.html, html: !!o.html, warnings,
+      warn(m) { if (!warnings.includes(m)) warnings.push(m); },
+    };
+  }
+
+  function convertWith(latex, opts) {
+    const nodes = new Parser(tokenize(latex), opts.warn).seq(false);
+    const ctx = makeCtx(opts);
+    return join(render(nodes, ctx), ctx).replace(/^ +| +$/g, "");
+  }
+
+  function convert(latex, o) {
+    const opts = normOpts(o);
+    return { text: convertWith(latex, opts), warnings: opts.warnings };
+  }
+
+  const MATH_RE = /(?<!\\)\$\$(.+?)(?<!\\)\$\$|\\\[(.+?)\\\]|\\\((.+?)\\\)|(?<![\\$])\$(?![\s$])(.+?)(?<![\s\\])\$(?!\d)/gsu;
+
+  function convertText(text, o) {
+    const opts = normOpts(o);
+    const out = [];
+    let pos = 0, m;
+    MATH_RE.lastIndex = 0;
+    const segments = [];
+    while ((m = MATH_RE.exec(text)) !== null) {
+      out.push(text.slice(pos, m.index).replace(/\\\$/g, "$"));
+      const inner = m[1] !== undefined ? m[1] : m[2] !== undefined ? m[2] : m[3] !== undefined ? m[3] : m[4];
+      out.push(convertWith(inner, opts));
+      segments.push(inner);
+      pos = m.index + m[0].length;
+    }
+    out.push(text.slice(pos).replace(/\\\$/g, "$"));
+    return { text: out.join(""), warnings: opts.warnings, formulas: segments };
+  }
+
+  // ------------------------------------------------------------------ HTML
+  // Zwischendarstellung (Option html) -> HTML mit <i>, <sub>, <sup>.
+  // Brüche und Wurzeln linear, weil Word, E-Mail-Programme und Editoren
+  // gestapelte Formeln aus HTML nicht zuverlässig übernehmen.
+  const escHTML = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const stripTags = (h) => h.replace(/<[^>]*>/g, "").replace(/&[a-z]+;/g, "x");
+  const simpleHTML = (h) => /^[\p{L}\p{N}\p{M}∂′.]+$/u.test(stripTags(h));
+  function richToHTML(str) {
+    const ch = cps(str);
+    let i = 0;
+    function seq() {
+      let out = "";
+      while (i < ch.length) {
+        const c = ch[i];
+        if (c === MK.end) { i++; return out; }
+        if (c === MK.mid) return out;
+        i++;
+        if (c === MK.sub || c === MK.under) out += "<sub>" + seq() + "</sub>";
+        else if (c === MK.sup || c === MK.over || c === MK.rootidx) out += "<sup>" + seq() + "</sup>";
+        else if (c === MK.it) out += "<i>" + seq() + "</i>";
+        else if (c === MK.delim) out += seq();
+        else if (c === MK.sqrt) { const b = seq(); out += "√" + (simpleHTML(b) ? b : "(" + b + ")"); }
+        else if (c === MK.frac || c === MK.binom) {
+          const n = seq(); if (ch[i] === MK.mid) i++; const d = seq();
+          out += c === MK.frac
+            ? (simpleHTML(n) ? n : "(" + n + ")") + "/" + (simpleHTML(d) ? d : "(" + d + ")")
+            : "C(" + n + ", " + d + ")";
+        } else if (c === "\n") out += "<br>";
+        else out += escHTML(c);
+      }
+      return out;
+    }
+    let html = "";
+    while (i < ch.length) { html += seq(); if (i < ch.length) i++; }
+    return html.replace(/<\/i><i>/g, "").replace(/<\/sub><sub>/g, "").replace(/<\/sup><sup>/g, "");
+  }
+
+  function toHTML(src, o, textMode) {
+    const opts = Object.assign({}, o, { html: true });
+    const r = textMode ? convertText(src, opts) : convert(src, opts);
+    return richToHTML(r.text);
+  }
+
+  const api = { convert, convertText, toHTML, richToHTML, styled, MARKERS: MK, VERSION: T.VERSION };
+  if (typeof module !== "undefined" && module.exports) module.exports = api;
+  else root.L2U = api;
+})(typeof window !== "undefined" ? window : globalThis);
+
+</script>
+<script>/* render.js */
+/*
+ * render.js – Bild-Export (SVG/PNG) mit echten Hoch- und Tiefstellungen,
+ * gestapelten Brüchen, Wurzelstrich und Grenzen unter/über Operatoren.
+ *
+ * Eingabe: Zwischendarstellung aus L2U.convert(latex, {rich: true}).text
+ * Ausgabe: SVG-Text. Für PNG zeichnet die App das SVG auf ein Canvas.
+ *
+ * Das Layout ist eine vereinfachte Nachbildung des TeX-Satzes, keine
+ * TeX-Engine. Maße in Vielfachen der Schriftgröße.
+ */
+(function (root) {
+  "use strict";
+  const MK = {
+    sub: "\uE000", sup: "\uE001", end: "\uE002", frac: "\uE003", mid: "\uE004",
+    under: "\uE005", over: "\uE006", sqrt: "\uE007", rootidx: "\uE008", binom: "\uE009",
+    delim: "\uE00A", it: "\uE00B",
+  };
+  const OPENERS = {
+    [MK.sub]: "sub", [MK.sup]: "sup", [MK.under]: "under", [MK.over]: "over",
+    [MK.sqrt]: "sqrt", [MK.rootidx]: "rootidx", [MK.frac]: "frac", [MK.binom]: "binom",
+    [MK.delim]: "delim",
+  };
+  const SCRIPT_KINDS = ["sub", "sup", "under", "over"];
+  const DEFAULT_FAMILY = "'STIX Two Math','Cambria Math','Latin Modern Math','STIX Two Text','Times New Roman',serif";
+
+  // ---------------------------------------------------------------- Parser
+  function parse(str) {
+    const ch = Array.from(str);
+    let i = 0;
+    function seq() {
+      const items = [];
+      let buf = "";
+      const flush = () => { if (buf) { items.push({ t: "text", s: buf }); buf = ""; } };
+      while (i < ch.length) {
+        const c = ch[i];
+        if (c === MK.end) { i++; flush(); return items; }
+        if (c === MK.mid) { flush(); return items; }
+        if (OPENERS[c]) {
+          i++; flush();
+          const kind = OPENERS[c];
+          if (kind === "frac" || kind === "binom") {
+            const n = seq();
+            if (ch[i] === MK.mid) i++;
+            const d = seq();
+            items.push({ t: kind, n, d });
+          } else {
+            items.push({ t: kind, c: seq() });
+          }
+          continue;
+        }
+        if (c === "\n") { flush(); items.push({ t: "nl" }); i++; continue; }
+        buf += c; i++;
+      }
+      flush();
+      return items;
+    }
+    const all = [];
+    while (i < ch.length) {
+      for (const it of seq()) all.push(it);
+      if (i < ch.length) i++; // verwaistes Steuerzeichen überspringen
+    }
+    return all;
+  }
+
+  // ---------------------------------------------------------------- Layout
+  // Box: { w, a (über Grundlinie), d (unter Grundlinie), ops: [...] }, y nach unten positiv
+  const place = (box, dx, dy) => box.ops.map((op) => {
+    const o = Object.assign({}, op);
+    if (o.k === "t") { o.x += dx; o.y += dy; }
+    else if (o.k === "p") { o.pts = o.pts.map(([x, y]) => [x + dx, y + dy]); }
+    return o;
+  });
+  const emptyBox = () => ({ w: 0, a: 0, d: 0, ops: [] });
+
+  function hcat(boxes) {
+    let x = 0, a = 0, d = 0;
+    const ops = [];
+    for (const b of boxes) {
+      ops.push(...place(b, x, 0));
+      x += b.w; a = Math.max(a, b.a); d = Math.max(d, b.d);
+    }
+    return { w: x, a, d, ops };
+  }
+
+  function makeLayout(measure) {
+    // Leerzeichen als geschützte Leerzeichen, damit SVG sie nicht zusammenfasst
+    const textBox = (s, size) => {
+      s = s.replace(/ /g, "\u00A0");
+      return { w: measure(s, size), a: 0.72 * size, d: 0.24 * size, ops: [{ k: "t", x: 0, y: 0, s, size }] };
+    };
+
+    function seqBox(items, size) {
+      const boxes = [];
+      for (let k = 0; k < items.length; k++) {
+        const it = items[k];
+        if (it.t === "text") {
+          const next = items[k + 1];
+          if (next && (next.t === "under" || next.t === "over")) {
+            // Grenzen gehören nur zum letzten Wort (z. B. „∑“ oder „lim“)
+            const m = it.s.match(/^([\s\S]*\s)?(\S+)$/u);
+            if (m && m[1]) boxes.push(textBox(m[1], size));
+            boxes.push(textBox(m ? m[2] : it.s, size));
+          } else {
+            boxes.push(textBox(it.s, size));
+          }
+        } else if (it.t === "frac" || it.t === "binom") {
+          boxes.push(fracBox(it, size));
+        } else if (it.t === "sqrt") {
+          boxes.push(sqrtBox(it.c, size));
+        } else if (it.t === "rootidx") {
+          const ib = seqBox(it.c, size * 0.55);
+          const kern = Math.min(ib.w, 0.3 * size);
+          boxes.push({ w: ib.w - kern, a: 0.5 * size + ib.a, d: 0, ops: place(ib, 0, -0.5 * size) });
+        } else if (SCRIPT_KINDS.includes(it.t)) {
+          const sc = {};
+          while (k < items.length && SCRIPT_KINDS.includes(items[k].t)) { sc[items[k].t] = items[k].c; k++; }
+          k--;
+          boxes.push(scriptBox(boxes.pop() || emptyBox(), sc, size));
+        } else if (it.t === "delim") {
+          const glyph = it.c.map((x) => x.s || "").join("");
+          boxes.push({ delim: glyph, w: 0, a: 0, d: 0, ops: [] });
+        }
+      }
+      // Begrenzer (\left, \right) auf die Höhe des übrigen Inhalts skalieren
+      let ma = 0.72 * size, md = 0.24 * size;
+      for (const b of boxes) if (!b.delim) { ma = Math.max(ma, b.a); md = Math.max(md, b.d); }
+      for (let k = 0; k < boxes.length; k++) {
+        const b = boxes[k];
+        if (!b.delim) continue;
+        const S = Math.max(size, (ma + md) * 1.02);
+        const y = (md - ma) / 2 + 0.25 * S;
+        const tb = textBox(b.delim, S);
+        boxes[k] = { w: tb.w, a: Math.max(ma, -y + 0.75 * S), d: Math.max(md, y + 0.25 * S), ops: place(tb, 0, y) };
+      }
+      return hcat(boxes);
+    }
+
+    function scriptBox(base, sc, size) {
+      const ss = size * 0.7;
+      let box = base;
+      if (sc.under || sc.over) {
+        const u = sc.under ? seqBox(sc.under, ss) : null;
+        const o = sc.over ? seqBox(sc.over, ss) : null;
+        const W = Math.max(box.w, u ? u.w : 0, o ? o.w : 0);
+        const ops = place(box, (W - box.w) / 2, 0);
+        let a = box.a, d = box.d;
+        if (u) { const y = box.d + 0.08 * size + u.a; ops.push(...place(u, (W - u.w) / 2, y)); d = y + u.d; }
+        if (o) { const y = -(box.a + 0.08 * size + o.d); ops.push(...place(o, (W - o.w) / 2, y)); a = -y + o.a; }
+        box = { w: W, a, d, ops };
+      }
+      if (sc.sub || sc.sup) {
+        const sb = sc.sub ? seqBox(sc.sub, ss) : null;
+        const sp = sc.sup ? seqBox(sc.sup, ss) : null;
+        const x = box.w + 0.04 * size;
+        const ops = box.ops.slice();
+        let a = box.a, d = box.d, W = box.w;
+        if (sp) { const y = -0.42 * size; ops.push(...place(sp, x, y)); a = Math.max(a, -y + sp.a); W = Math.max(W, x + sp.w); }
+        if (sb) { const y = sp ? 0.3 * size : 0.24 * size; ops.push(...place(sb, x, y)); d = Math.max(d, y + sb.d); W = Math.max(W, x + sb.w); }
+        box = { w: W, a, d, ops };
+      }
+      return box;
+    }
+
+    function fracBox(it, size) {
+      const fs = size * 0.85;
+      const n = seqBox(it.n, fs), dd = seqBox(it.d, fs);
+      const pad = 0.12 * size, axis = 0.26 * size, gap = 0.14 * size, th = Math.max(1, 0.05 * size);
+      const inner = Math.max(n.w, dd.w) + 2 * pad;
+      const ops = [];
+      const yn = -axis - gap - n.d, yd = -axis + gap + dd.a;
+      let x0 = 0.06 * size;
+      const a = axis + gap + n.d + n.a, d = -axis + gap + dd.a + dd.d;
+      if (it.t === "binom") {
+        const pw = 0.25 * size;
+        ops.push({ k: "p", pts: [[x0 + pw, -a], [x0, (d - a) / 2], [x0 + pw, d]], curve: true, th });
+        x0 += pw;
+      }
+      ops.push(...place(n, x0 + (inner - n.w) / 2, yn));
+      ops.push(...place(dd, x0 + (inner - dd.w) / 2, yd));
+      if (it.t === "frac") ops.push({ k: "p", pts: [[x0, -axis], [x0 + inner, -axis]], th });
+      let w = x0 + inner;
+      if (it.t === "binom") {
+        const pw = 0.25 * size;
+        ops.push({ k: "p", pts: [[w, -a], [w + pw, (d - a) / 2], [w, d]], curve: true, th });
+        w += pw;
+      }
+      return { w: w + 0.06 * size, a: a + 0.04 * size, d: d + 0.04 * size, ops };
+    }
+
+    function sqrtBox(items, size) {
+      const body = seqBox(items, size);
+      const th = Math.max(1, 0.05 * size);
+      const top = -(Math.max(body.a, 0.72 * size) + 0.1 * size);
+      const bot = Math.max(body.d, 0.2 * size);
+      const rw = 0.5 * size;
+      const ops = [{ k: "p", pts: [[0, -0.28 * size], [0.1 * size, -0.34 * size], [0.24 * size, bot], [rw, top], [rw + body.w + 0.08 * size, top]], th }];
+      ops.push(...place(body, rw + 0.04 * size, 0));
+      return { w: rw + body.w + 0.12 * size, a: -top + th, d: bot + th, ops };
+    }
+
+    function layout(str, size) {
+      const items = parse(str);
+      const lines = [[]];
+      for (const it of items) { if (it.t === "nl") lines.push([]); else lines[lines.length - 1].push(it); }
+      const boxes = lines.map((l) => seqBox(l, size));
+      let y = 0, w = 0;
+      const ops = [];
+      boxes.forEach((b, idx) => {
+        y += (idx === 0 ? 0 : 0.35 * size) + Math.max(b.a, 0.72 * size);
+        ops.push(...place(b, 0, y));
+        y += Math.max(b.d, 0.24 * size);
+        w = Math.max(w, b.w);
+      });
+      return { w, h: y, ops };
+    }
+    return layout;
+  }
+
+  // ---------------------------------------------------------------- SVG
+  const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const r2 = (v) => Math.round(v * 100) / 100;
+
+  function browserMeasure(family) {
+    const cv = (typeof document !== "undefined") ? document.createElement("canvas") : null;
+    const ctx = cv ? cv.getContext("2d") : null;
+    return (s, size) => {
+      if (!ctx) return Array.from(s).length * size * 0.55;
+      ctx.font = size + "px " + family;
+      return ctx.measureText(s).width;
+    };
+  }
+
+  function toSVG(str, o) {
+    o = o || {};
+    const size = o.size || 48;
+    const family = o.family || DEFAULT_FAMILY;
+    const color = o.color || "#000";
+    const bg = o.background === undefined ? "#fff" : o.background;
+    const pad = o.padding === undefined ? 0.4 * size : o.padding;
+    const measure = o.measure || browserMeasure(family);
+    const L = makeLayout(measure)(str, size);
+    const W = Math.ceil(L.w + 2 * pad), H = Math.ceil(L.h + 2 * pad);
+    const parts = [];
+    parts.push('<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="' + W + '" height="' + H +
+      '" viewBox="0 0 ' + W + " " + H + '">');
+    if (bg) parts.push('<rect width="100%" height="100%" fill="' + bg + '"/>');
+    parts.push('<g fill="' + color + '" stroke="' + color + '" font-family="' + esc(family).replace(/"/g, "&quot;") +
+      '" style="white-space:pre">');
+    for (const op of L.ops) {
+      if (op.k === "t") {
+        parts.push('<text x="' + r2(op.x + pad) + '" y="' + r2(op.y + pad) + '" font-size="' + r2(op.size) +
+          '" stroke="none">' + esc(op.s) + "</text>");
+      } else if (op.k === "p") {
+        const pts = op.pts.map(([x, y]) => [r2(x + pad), r2(y + pad)]);
+        const d = op.curve
+          ? "M" + pts[0].join(" ") + " Q" + pts[1].join(" ") + " " + pts[2].join(" ")
+          : "M" + pts.map((p) => p.join(" ")).join(" L");
+        parts.push('<path d="' + d + '" fill="none" stroke-width="' + r2(op.th) +
+          '" stroke-linejoin="round" stroke-linecap="round"/>');
+      }
+    }
+    parts.push("</g></svg>");
+    return parts.join("");
+  }
+
+  const api = { toSVG, parse, makeLayout, DEFAULT_FAMILY };
+  if (typeof module !== "undefined" && module.exports) module.exports = api;
+  else root.L2URender = api;
+})(typeof window !== "undefined" ? window : globalThis);
+
+</script>
+<script>
+(function () {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem("l2u." + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem("l2u." + k, JSON.stringify(v)); } catch (e) { /* kein Speicher */ } },
+  };
+
+  const EXAMPLES = [
+    ["Zustandsraum", "s_t \\in S_{\\text{phys}} \\times S_{\\text{non-phys}}"],
+    ["Summe", "\\sum_{i=1}^{n} x_i^2"],
+    ["Bayes", "P(A \\mid B) = \\frac{P(B \\mid A)\\,P(A)}{P(B)}"],
+    ["Attention", "\\operatorname{softmax}\\!\\left(\\frac{QK^\\top}{\\sqrt{d_k}}\\right)V"],
+    ["Normalverteilung", "X \\sim \\mathcal{N}(\\mu,\\sigma^2)"],
+    ["Gradientenabstieg", "\\theta \\leftarrow \\theta - \\eta \\nabla_\\theta \\mathcal{L}"],
+    ["KL-Divergenz", "D_{\\mathrm{KL}}(P \\parallel Q)"],
+    ["Nicht transitiv", "A \\approx B \\ \\land\\ B \\approx C \\ \\nRightarrow\\ A \\approx C"],
+    ["Text mit Formel", "Sei $s_t \\in S$ der Zustand und $\\pi(a_t \\mid s_t)$ die Policy."],
+  ];
+
+  // Einträge: Array = einzelne Befehle, Zeichenkette = Formel
+  const REF = [
+    ["Indizes", ["x_i", "x^2", "x_{i+1}^{n}", "x^{(i)}", "A^\\top", "f'(x)"]],
+    ["Griechisch", [["\\alpha", "\\beta", "\\gamma", "\\delta"], ["\\epsilon", "\\varepsilon", "\\theta"],
+      ["\\lambda", "\\mu", "\\pi", "\\sigma"], ["\\phi", "\\varphi", "\\omega"], ["\\Gamma", "\\Delta", "\\Sigma", "\\Omega"]]],
+    ["Mengen", [["\\in", "\\notin", "\\subseteq"], ["\\cup", "\\cap", "\\setminus"], ["\\varnothing", "\\times"],
+      ["\\mathbb{N}", "\\mathbb{R}", "\\mathbb{C}"], "\\{x \\mid x > 0\\}"]],
+    ["Logik", [["\\forall", "\\exists", "\\nexists"], ["\\land", "\\lor", "\\lnot"], ["\\Rightarrow", "\\Leftrightarrow", "\\nRightarrow"],
+      ["\\vdash", "\\models", "\\nvdash"], ["\\therefore", "\\because", "\\blacksquare"]]],
+    ["Relationen", [["\\leq", "\\geq", "\\neq"], ["\\approx", "\\not\\approx", "\\equiv"], ["\\sim", "\\simeq", "\\cong", "\\propto"],
+      ["\\ll", "\\gg", "\\prec", "\\succ"], ["\\perp", "\\parallel", "\\mid"]]],
+    ["Operatoren", [["\\sum", "\\prod", "\\int", "\\oint"], ["\\partial", "\\nabla", "\\infty"], ["\\cdot", "\\circ", "\\pm"],
+      ["\\oplus", "\\otimes", "\\odot"], "\\sin x + \\log_2 n"]],
+    ["Pfeile", [["\\to", "\\mapsto", "\\leftarrow"], ["\\hookrightarrow", "\\twoheadrightarrow"], ["\\rightsquigarrow", "\\nrightarrow"],
+      "x \\xrightarrow{f} y"]],
+    ["Schriften", [["\\mathbf{v}", "\\boldsymbol{\\theta}"], ["\\mathcal{L}", "\\mathcal{N}"], ["\\mathfrak{g}", "\\mathbb{E}"],
+      ["\\text{Text}", "\\operatorname{Var}(X)"]]],
+    ["Konstrukte", ["\\frac{a+b}{2}", "\\frac{1}{2}", "\\sqrt{x+1}", "\\sqrt[3]{x}", ["\\hat{x}", "\\bar{x}", "\\vec{v}"],
+      "\\lVert x\\rVert_2", "a \\equiv b \\pmod{n}"]],
+  ];
+
+  const ids = ["o-italic", "o-greek", "o-u18", "o-y", "o-strict"];
+  const mode = () => document.querySelector("input[name=mode]:checked").value;
+  const opts = () => ({ italic: $("o-italic").checked, greekItalic: $("o-greek").checked,
+                        unicode18: $("o-u18").checked, lookalike: $("o-y").checked, strict: $("o-strict").checked });
+
+  let lastSVG = "", seq = 0, lastUrl = "";
+
+  // Vorschau als PNG-Bild: per Rechtsklick kopier- und speicherbar, auch wo Downloads gesperrt sind
+  async function showPreview(svg) {
+    const my = ++seq;
+    if (!svg) { $("img").innerHTML = ""; return; }
+    try {
+      const blob = await svgToPng(svg, 2);
+      if (my !== seq) return;
+      if (lastUrl) URL.revokeObjectURL(lastUrl);
+      lastUrl = URL.createObjectURL(blob);
+      const w = +(svg.match(/width="(\d+)"/) || [0, 0])[1];
+      const img = document.createElement("img");
+      img.src = lastUrl; img.alt = "Formel als Bild"; if (w) img.width = w;
+      $("img").innerHTML = ""; $("img").appendChild(img);
+    } catch (e) {
+      if (my === seq) $("img").innerHTML = svg;
+    }
+  }
+
+  function update() {
+    const src = $("in").value;
+    const o = opts();
+    const text = mode() === "text";
+    const r = text ? L2U.convertText(src, o) : L2U.convert(src, o);
+    $("out").value = r.text;
+    $("count").textContent = Array.from(r.text).length + " Zeichen";
+    const ul = $("warn");
+    ul.innerHTML = "";
+    ul.className = r.warnings.length ? "" : "empty";
+    (r.warnings.length ? r.warnings : ["Keine."]).forEach((w) => {
+      const li = document.createElement("li"); li.textContent = w; ul.appendChild(li);
+    });
+    const ro = Object.assign({}, o, { rich: true });
+    const rich = text ? L2U.convertText(src, ro).text : L2U.convert(src, ro).text;
+    const html = src.trim() ? L2U.toHTML(src, o, text) : "";
+    $("html-prev").innerHTML = html;
+    $("html-src").value = html;
+    lastSVG = rich.trim() ? L2URender.toSVG(rich, { size: +$("size").value }) : "";
+    showPreview(lastSVG);
+    store.set("in", src); store.set("mode", mode()); store.set("size", $("size").value);
+    ids.forEach((id) => store.set(id, $(id).checked));
+  }
+
+  function flash(el, msg) {
+    el.textContent = msg;
+    clearTimeout(el._t);
+    el._t = setTimeout(() => { el.textContent = ""; }, 3000);
+  }
+
+  async function copyText() {
+    const t = $("out").value;
+    try { await navigator.clipboard.writeText(t); flash($("status"), "Kopiert."); }
+    catch (e) {
+      $("out").focus(); $("out").select();
+      try { document.execCommand("copy"); flash($("status"), "Kopiert."); }
+      catch (e2) { flash($("status"), "Kopieren nicht möglich – bitte markieren und kopieren."); }
+    }
+  }
+
+  async function copyHTML() {
+    const html = $("html-src").value, plain = $("out").value;
+    if (!html) return;
+    try {
+      if (!window.ClipboardItem || !navigator.clipboard || !navigator.clipboard.write) throw new Error("x");
+      await navigator.clipboard.write([new ClipboardItem({
+        "text/html": new Blob([html], { type: "text/html" }),
+        "text/plain": new Blob([plain], { type: "text/plain" }),
+      })]);
+      flash($("htmlstatus"), "Formatiert kopiert.");
+    } catch (e) {
+      // Ersatzweg: Vorschau markieren und kopieren
+      try {
+        const r = document.createRange(); r.selectNodeContents($("html-prev"));
+        const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+        const ok = document.execCommand("copy"); sel.removeAllRanges();
+        flash($("htmlstatus"), ok ? "Formatiert kopiert." : "Kopieren nicht möglich – Vorschau markieren und kopieren.");
+      } catch (e2) { flash($("htmlstatus"), "Kopieren nicht möglich – Vorschau markieren und kopieren."); }
+    }
+  }
+  async function copyHTMLSource() {
+    try { await navigator.clipboard.writeText($("html-src").value); flash($("htmlstatus"), "Quelltext kopiert."); }
+    catch (e) { $("html-src").select(); flash($("htmlstatus"), "Quelltext markiert – bitte kopieren."); }
+  }
+
+  function svgToPng(svg, scale) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        const c = document.createElement("canvas");
+        c.width = Math.ceil(img.width * scale); c.height = Math.ceil(img.height * scale);
+        const g = c.getContext("2d");
+        g.fillStyle = "#fff"; g.fillRect(0, 0, c.width, c.height);
+        g.scale(scale, scale); g.drawImage(img, 0, 0);
+        c.toBlob((b) => (b ? resolve(b) : reject(new Error("PNG konnte nicht erzeugt werden."))), "image/png");
+      };
+      img.onerror = () => reject(new Error("SVG konnte nicht gezeichnet werden."));
+      img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+    });
+  }
+
+  // In claude.ai-Artefakten laufen Downloads über die Plattform (Fähigkeit „downloads“),
+  // in der eigenständigen Datei über einen normalen Download-Link.
+  let dl = null;
+  if (window.claude && typeof window.claude.use === "function") {
+    window.claude.use("downloads").then((ns) => { dl = ns; }).catch(() => { dl = null; });
+  }
+  async function saveFile(blob, name, statusEl) {
+    if (dl) {
+      try { await dl.save({ filename: name, data: blob }); flash(statusEl, "Gespeichert."); }
+      catch (e) {
+        flash(statusEl, e && e.code === "declined" ? "Abgebrochen."
+          : "Speichern hier nicht möglich – Vorschaubild per Rechtsklick sichern.");
+      }
+      return;
+    }
+    download(blob, name); flash(statusEl, "Gespeichert.");
+  }
+
+  function download(blob, name) {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  }
+
+  async function copyPng() {
+    if (!lastSVG) return;
+    try {
+      if (!window.ClipboardItem || !navigator.clipboard || !navigator.clipboard.write) throw new Error("x");
+      await navigator.clipboard.write([new ClipboardItem({ "image/png": svgToPng(lastSVG, 2) })]);
+      flash($("imgstatus"), "Bild kopiert.");
+    } catch (e) {
+      flash($("imgstatus"), "Bild kopieren wird hier nicht unterstützt – bitte „PNG speichern“ verwenden.");
+    }
+  }
+
+  // Beispiele und Referenz
+  EXAMPLES.forEach(([name, src], i) => {
+    const op = document.createElement("option"); op.value = String(i); op.textContent = name; $("examples").appendChild(op);
+  });
+  $("examples").addEventListener("change", (e) => {
+    const ex = EXAMPLES[+e.target.value];
+    if (!ex) return;
+    const isText = ex[1].includes("$");
+    document.querySelector("input[name=mode][value=" + (isText ? "text" : "math") + "]").checked = true;
+    $("in").value = ex[1]; e.target.value = ""; update(); $("in").focus();
+  });
+
+  function insert(code) {
+    const ta = $("in");
+    const s = ta.selectionStart, e = ta.selectionEnd;
+    ta.value = ta.value.slice(0, s) + code + ta.value.slice(e);
+    ta.selectionStart = ta.selectionEnd = s + code.length;
+    ta.focus(); update();
+  }
+  REF.forEach(([title, items]) => {
+    const t = document.createElement("table");
+    const cap = document.createElement("caption"); cap.textContent = title; t.appendChild(cap);
+    items.forEach((entry) => {
+      const codes = Array.isArray(entry) ? entry : [entry];
+      const tr = document.createElement("tr");
+      const td1 = document.createElement("td"); td1.className = "code";
+      codes.forEach((code, i) => {
+        if (i) td1.appendChild(document.createTextNode(" "));
+        const b = document.createElement("button"); b.type = "button"; b.textContent = code;
+        b.addEventListener("click", () => insert(code)); td1.appendChild(b);
+      });
+      const td2 = document.createElement("td"); td2.className = "res";
+      td2.textContent = codes.map((c) => L2U.convert(c).text).join("  ");
+      tr.appendChild(td1); tr.appendChild(td2); t.appendChild(tr);
+    });
+    $("ref").appendChild(t);
+  });
+
+  // Zustand wiederherstellen
+  $("ver").textContent = L2U.VERSION;
+  $("in").value = store.get("in", EXAMPLES[0][1]);
+  const m = store.get("mode", "math");
+  const radio = document.querySelector("input[name=mode][value=" + (m === "text" ? "text" : "math") + "]");
+  if (radio) radio.checked = true;
+  $("size").value = store.get("size", "48");
+  ids.forEach((id) => { $(id).checked = store.get(id, id === "o-italic"); });
+
+  $("in").addEventListener("input", update);
+  document.querySelectorAll("input[name=mode], .bar input[type=checkbox]").forEach((el) => el.addEventListener("change", update));
+  $("size").addEventListener("change", update);
+  $("copy").addEventListener("click", copyText);
+  $("png-copy").addEventListener("click", copyPng);
+  $("html-copy").addEventListener("click", copyHTML);
+  $("html-src-copy").addEventListener("click", copyHTMLSource);
+  $("png-save").addEventListener("click", async () => {
+    if (!lastSVG) return;
+    try { await saveFile(await svgToPng(lastSVG, 2), "formel.png", $("imgstatus")); }
+    catch (e) { flash($("imgstatus"), e.message); }
+  });
+  $("svg-save").addEventListener("click", () => {
+    if (lastSVG) saveFile(new Blob([lastSVG], { type: "image/svg+xml" }), "formel.svg", $("imgstatus"));
+  });
+  update();
+})();
+</script>
+</body>
+</html>
